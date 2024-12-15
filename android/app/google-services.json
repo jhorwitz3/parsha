@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821753986864",
+    "project_id": "parsha-15dd3",
+    "storage_bucket": "parsha-15dd3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821753986864:android:5c6973b81ee0eef52dd2f5",
+        "android_client_info": {
+          "package_name": "co.h.p"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD19_qW7i9oBS6bfBRxJSnwDGLWEcfrZ60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
