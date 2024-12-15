@@ -43,3 +43,5 @@ app.*.map.json
 /android/app/release
 
 database/*.json
+database/venv
+database/venv/**
