@@ -1,11 +1,12 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+import google.generativeai as genai
+from dateutil.relativedelta import relativedelta
+
 from datetime import datetime
 import os
 import json
-import google.generativeai as genai
 import datetime
-from dateutil.relativedelta import relativedelta
 import time
 
 
@@ -88,4 +89,4 @@ def main():
 
 
 if __name__ == '__main__':
-   main()   
+  main()   
