@@ -69,7 +69,7 @@ def main():
 
     # Create a datetime object for the desired date and time
     # Example usage:
-    year = 2025
+    year = 2024
     fridayDates = getFridaysInYear(year)
     count = 0
     for friday in fridayDates:

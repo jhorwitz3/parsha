@@ -45,3 +45,5 @@ app.*.map.json
 database/*.json
 database/venv
 database/venv/*
+
+pyvenv
