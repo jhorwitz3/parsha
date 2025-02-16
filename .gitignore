@@ -47,3 +47,4 @@ database/venv
 database/venv/*
 
 pyvenv
+node_modules
