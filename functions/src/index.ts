@@ -11,29 +11,39 @@
 
 import {onCallGenkit} from "firebase-functions/https";
 import {defineSecret} from "firebase-functions/params";
+// import {getFirestore} from "firebase-admin/firestore";
 import {parshaDescriptionFlow} from "./flow";
 import admin from "firebase-admin";
 
 const googleAIapiKey = defineSecret("GOOGLE_GENAI_API_KEY");
-// const {onSchedule} = require("firebase-functions/v2/scheduler");
-// const {logger} = require("firebase-functions");
+// import {ScheduledEvent, onSchedule} from "firebase-functions/v2/scheduler";
+// import {logger} from "firebase-functions";
 
 // The Firebase Admin SDK to delete inactive users.
 admin.initializeApp();
 
 // Run once a day at midnight, to clean up the users
 // Manually run the task here https://console.cloud.google.com/cloudscheduler
-// exports.getparsha = onSchedule("every day 00:00", async (event:any) => {
-//     // Fetch all user details.
+export const generateParsha = onCallGenkit(
+  {secrets: [googleAIapiKey]},
+  parshaDescriptionFlow);
+
+// exports.getparsha = onSchedule("every day 00:00",
+//   async (event:ScheduledEvent) => {
+//   // Fetch all user details.
 //     const schema = await parshaDescriptionFlow();
 
-//     logger.log("schema");
-//     logger.log("name: %s", schema.name);
-//     logger.log("description: %s", schema.description);
-//     logger.log("characters: %s", schema.characters);
-//     logger.log("event: %s", event);
+//     // logger.log("schema");
+//     // logger.log("name: %s", schema.name);
+//     // logger.log("description: %s", schema.description);
+//     // logger.log("characters: %s", schema.characters);
+//     logger.log(`schema: ${schema}`);
+
+//     const writeResult = await getFirestore()
+//       .collection("currentParsha")
+//       .add({newParsha: schema});
+
+//     logger.log(`writeresult: ${writeResult}`);
 //   });
 
-export const generateParsha = onCallGenkit(
-{secrets: [googleAIapiKey]},
-parshaDescriptionFlow);
+
