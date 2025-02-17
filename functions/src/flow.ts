@@ -2,6 +2,10 @@
 import { gemini20Flash, googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
 import { z } from "zod";
+import { onCallGenkit } from 'firebase-functions/https';
+import {defineSecret} from "firebase-functions/params";
+
+const googleAIapiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
 // configure a Genkit instance
 const ai = genkit({
@@ -32,6 +36,11 @@ const ParshaSchema = z.object({
       return output;
     }
   );
+
+export const generateParsha = onCallGenkit(
+    {secrets: [googleAIapiKey]},
+    parshaDescriptionFlow);
+
 
 // async function main() {
 //   // make a generation request
