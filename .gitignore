@@ -50,4 +50,4 @@ pyvenv
 node_modules
 **/.env
 
-**/**/google-services.json
+**/**/**/google-services.json
