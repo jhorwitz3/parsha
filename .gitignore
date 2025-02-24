@@ -49,3 +49,5 @@ database/venv/*
 pyvenv
 node_modules
 **/.env
+
+**/**/google-services.json
