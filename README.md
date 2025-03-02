@@ -1,16 +1,11 @@
 # parsha
 
-A new Flutter project.
+An app to inform about this week's torah reading.
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+TODOS:
+1. Utilize this API in backend to determine what parsha is it: https://www.hebcal.com/home/4277/leyning-torah-reading-api
+2. Build out tabbed screens: description, characters, and commentary (start with just description and characters)
+3. Get commentary sources - continue w/ AI probably (lazy)
+4. Build app and upload to app stores
+5. Build weekly push notification on Friday 

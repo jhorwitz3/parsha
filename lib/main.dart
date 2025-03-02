@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parsha/models/parsha.dart';
+import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'firebase_options.dart';
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: appTheme,
       home: const MyHomePage(),
+      routes: routes,
     );
   }
 }
@@ -82,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
                 // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                onPressed: () => debugPrint('pressed'),
+                onPressed: () => Navigator.of(context).pushNamed('/home'),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
