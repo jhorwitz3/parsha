@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parsha/models/parsha.dart';
+import 'package:parsha/style.dart';
 import 'firebase_options.dart';
 
 // ...
@@ -24,10 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff020a63)),
-        useMaterial3: true,
-      ),
+      theme: appTheme,
       home: const MyHomePage(),
     );
   }
@@ -67,26 +65,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          parsha?.name ?? 'This Weeks Parsha',
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.fromLTRB(24, height / 3, 24, height / 4),
               child: Text(
-                parsha?.description ?? 'Loading',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                (parsha?.name == null) ? 'This Weeks Parsha' : 'Parashat ${parsha!.name}',
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
+            ElevatedButton(
+                // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () => debugPrint('pressed'),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Learn More',
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                ))
           ],
         ),
       ),
