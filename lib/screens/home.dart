@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:parsha/screens/characters.dart';
+import 'package:parsha/screens/description.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,7 +11,7 @@ class HomeScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         bottomNavigationBar: Container(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.surface,
           child: TabBar(
             tabs: [
               Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
@@ -20,9 +22,9 @@ class HomeScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            Center(child: Text('Description', style: Theme.of(context).textTheme.displayMedium)),
-            Center(child: Text('Characters', style: Theme.of(context).textTheme.displayMedium)),
-            Center(child: Text('Commentary', style: Theme.of(context).textTheme.displayMedium)),
+            const DescriptionScreen(),
+            const CharacterScreen(),
+            Center(child: Text('Coming soon!', style: Theme.of(context).textTheme.displayMedium)),
           ],
         ),
       ),

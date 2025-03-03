@@ -46,28 +46,38 @@ class MyHomePage extends ConsumerWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
+              child: Text(
+                'Parashat',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+            ),
             switch (parsha) {
               AsyncData(:final value) => Padding(
-                  padding: EdgeInsets.fromLTRB(24, height / 3, 24, height / 4),
+                  padding: EdgeInsets.fromLTRB(24, 0, 24, height / 4),
                   child: Text(
-                    'Parashat ${value.name}',
+                    value.name,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),
               AsyncError() => const Text('Oops, something unexpected happened'),
               _ => const CircularProgressIndicator(),
             },
-            ElevatedButton(
-                // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                onPressed: () => Navigator.of(context).pushNamed('/home'),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Learn More',
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                ))
+            Center(
+              child: ElevatedButton(
+                  // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () => Navigator.of(context).pushNamed('/home'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Learn More',
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                  )),
+            )
           ],
         ),
       ),
