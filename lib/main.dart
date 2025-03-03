@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
+import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'firebase_options.dart';
-
 // ...
 
 void main() async {
@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,41 +33,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final db = FirebaseFirestore.instance;
-  Parsha? parsha;
-
-  Future<void> getParshaFromDb() async {
-    try {
-      await db.collection("currentParsha").get().then((event) {
-        for (var doc in event.docs) {
-          Parsha currentParsha = Parsha.fromJson(doc.data());
-          setState(() {
-            parsha = currentParsha;
-          });
-        }
-      });
-    } catch (e) {
-      debugPrint('Exception: $e');
-    }
-  }
-
-  @override
-  void initState() {
-    getParshaFromDb();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
+    final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -75,13 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(24, height / 3, 24, height / 4),
-              child: Text(
-                (parsha?.name == null) ? 'This Weeks Parsha' : 'Parashat ${parsha!.name}',
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-            ),
+            switch (parsha) {
+              AsyncData(:final value) => Padding(
+                  padding: EdgeInsets.fromLTRB(24, height / 3, 24, height / 4),
+                  child: Text(
+                    'Parashat ${value.name}',
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                ),
+              AsyncError() => const Text('Oops, something unexpected happened'),
+              _ => const CircularProgressIndicator(),
+            },
             ElevatedButton(
                 // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () => Navigator.of(context).pushNamed('/home'),
