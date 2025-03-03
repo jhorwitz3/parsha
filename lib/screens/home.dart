@@ -10,15 +10,12 @@ class HomeScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        bottomNavigationBar: Container(
-          color: Theme.of(context).colorScheme.surface,
-          child: TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
-              Tab(icon: Icon(Icons.people, color: Theme.of(context).colorScheme.secondary)),
-              Tab(icon: Icon(Icons.chat, color: Theme.of(context).colorScheme.secondary)),
-            ],
-          ),
+        bottomNavigationBar: TabBar(
+          tabs: [
+            Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
+            Tab(icon: Icon(Icons.people, color: Theme.of(context).colorScheme.secondary)),
+            Tab(icon: Icon(Icons.chat, color: Theme.of(context).colorScheme.secondary)),
+          ],
         ),
         body: TabBarView(
           children: [

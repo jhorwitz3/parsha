@@ -11,14 +11,13 @@ class DescriptionScreen extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
 
     return switch (parsha) {
-      AsyncData(:final value) => Container(
-          color: Theme.of(context).colorScheme.primary,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
+      AsyncData(:final value) => Center(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
+            child: SingleChildScrollView(
               child: Text(
                 value.description,
-                style: Theme.of(context).textTheme.displayMedium,
+                style: Theme.of(context).textTheme.labelLarge,
               ),
             ),
           ),

@@ -42,7 +42,6 @@ class MyHomePage extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +67,7 @@ class MyHomePage extends ConsumerWidget {
             },
             Center(
               child: ElevatedButton(
-                  // style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
                   onPressed: () => Navigator.of(context).pushNamed('/home'),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
