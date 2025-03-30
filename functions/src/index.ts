@@ -16,6 +16,7 @@ import {initializeApp} from "firebase-admin/app";
 import {genParsha} from "./flow";
 import {ScheduledEvent, onSchedule} from "firebase-functions/scheduler";
 import {logger} from "firebase-functions";
+import {getCurrentParsha, ParshaInfo} from "./hebcal.js";
 
 
 initializeApp();
@@ -26,7 +27,9 @@ const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 // Take the text parameter passed to this HTTP endpoint and insert it into
 // Firestore under the path /messages/:documentId/original
 exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
-  const parshaOut = await genParsha(apiKey.value());
+  // get currentParsha name, generate description
+  const parshaInfo: ParshaInfo = getCurrentParsha(false);
+  const parshaOut = await genParsha(apiKey.value(), parshaInfo.parsha);
 
   const data = {
     name: parshaOut.name,
@@ -45,7 +48,9 @@ exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
 exports.genParshaDaily = onSchedule({schedule: "every day 00:00",
   secrets: [apiKey]},
 async (event:ScheduledEvent) => {
-  const parshaOut = await genParsha(apiKey.value());
+  // get currentParsha name, generate description
+  const parshaInfo: ParshaInfo = getCurrentParsha(false);
+  const parshaOut = await genParsha(apiKey.value(), parshaInfo.parsha);
 
   const data = {
     name: parshaOut.name,

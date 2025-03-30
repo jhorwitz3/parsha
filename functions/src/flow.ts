@@ -10,7 +10,7 @@ const ParshaSchema = z.object({
   characters: z.array(z.string()),
 });
 
-export const genParsha = async (apiKey: string) =>{
+export const genParsha = async (apiKey: string, parshaName: string) =>{
   // configure a Genkit instance
   const ai = genkit({
     plugins: [googleAI({apiKey: apiKey})],
@@ -26,7 +26,8 @@ export const genParsha = async (apiKey: string) =>{
     async () => {
       const {output} = await ai.generate({
         model: gemini20Flash,
-        prompt: `Give the name of this weeks parsha, 
+        prompt: `For parsha with name ${parshaName}, 
+        give the name of this weeks parsha, 
       a description of the story of the parsha, 
       and identify all key characters, providing brief bios of each character.`,
         output: {schema: ParshaSchema},
