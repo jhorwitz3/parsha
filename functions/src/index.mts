@@ -13,10 +13,10 @@ import {onRequest} from "firebase-functions/https";
 import {getFirestore} from "firebase-admin/firestore";
 import {defineSecret} from "firebase-functions/params";
 import {initializeApp} from "firebase-admin/app";
-import {genParsha} from "./flow";
+import {genParsha} from "./flow.js";
 import {ScheduledEvent, onSchedule} from "firebase-functions/scheduler";
 import {logger} from "firebase-functions";
-import {getCurrentParsha, ParshaInfo} from "./hebcal.js";
+import {getCurrentParsha, ParshaInfo} from "./hebcal.mjs";
 
 
 initializeApp();
