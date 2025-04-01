@@ -29,12 +29,14 @@ exports.addTodayParsha = onRequest({ secrets: [apiKey] }, async (req, res) => {
         description: parshaOut.description,
         characters: parshaOut.characters,
     };
+    logger.log(`Parashat: ${data.name} added now for HebCal ${parshaInfo.parsha}.`);
+    logger.log(`date: ${parshaInfo.date}`);
     // Push the new message into Firestore using the Firebase Admin SDK.
     await db
         .collection("currentParsha").doc("today")
         .set(data);
     // Send back a message that we've successfully written the message
-    res.json({ result: `Parashat: ${data.name} added now.` });
+    res.json({ result: `Parashat: ${data.name} added now for HebCal ${parshaInfo.parsha}.` });
 });
 exports.genParshaDaily = onSchedule({ schedule: "every day 00:00",
     secrets: [apiKey] }, async (event) => {
