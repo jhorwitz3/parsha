@@ -33,9 +33,12 @@ exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
 
   const data = {
     name: parshaOut.name,
-    description: parshaOut.description,
+    summary: parshaOut.summary,
+    keyPoints: parshaOut.keyPoints,
+    themes: parshaOut.themes,
     characters: parshaOut.characters,
-  };
+    lessons: parshaOut.lessons
+};
 
   logger.log(`Parashat: ${data.name} added now for HebCal ${parshaInfo.parsha}.`);
   logger.log(`date: ${parshaInfo.date}`);
@@ -57,9 +60,12 @@ async (event:ScheduledEvent) => {
 
   const data = {
     name: parshaOut.name,
-    description: parshaOut.description,
+    summary: parshaOut.summary,
+    keyPoints: parshaOut.keyPoints,
+    themes: parshaOut.themes,
     characters: parshaOut.characters,
-  };
+    lessons: parshaOut.lessons
+};
 
   // Push the new message into Firestore using the Firebase Admin SDK.
   await db
