@@ -11,15 +11,28 @@ class DescriptionScreen extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
 
     return switch (parsha) {
-      AsyncData(:final value) => Center(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
-            child: SingleChildScrollView(
-              child: Text(
-                value.description,
-                style: Theme.of(context).textTheme.labelLarge,
+      AsyncData(:final value) => SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
+                child: Text(
+                  value.name,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge!
+                      .copyWith(fontSize: 36),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                child: Text(
+                  value.summary,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+            ],
           ),
         ),
       AsyncError() => const Text('Oops, something unexpected happened'),

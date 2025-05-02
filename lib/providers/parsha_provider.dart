@@ -12,7 +12,13 @@ final parshaProvider = FutureProvider.autoDispose((ref) async {
 
 Future<Parsha> getParshaFromDb() async {
   final db = FirebaseFirestore.instance;
-  Parsha currentParsha = Parsha(name: 'This Weeks Parsha', description: 'An error has occurred', characters: []);
+  Parsha currentParsha = Parsha(
+      name: 'This Weeks Parsha',
+      summary: 'An error has occurred',
+      keyPoints: [],
+      themes: [],
+      lessons: [],
+      characters: []);
   try {
     await db.collection("currentParsha").get().then((event) {
       for (var doc in event.docs) {

@@ -23,7 +23,7 @@ class CharacterScreen extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            value.characters[index],
+                            value.characters[index].name,
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                         ),
