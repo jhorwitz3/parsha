@@ -16,7 +16,7 @@ import {initializeApp} from "firebase-admin/app";
 import {genParsha} from "./flow.js";
 import {ScheduledEvent, onSchedule} from "firebase-functions/scheduler";
 import {logger} from "firebase-functions";
-import {getCurrentParsha, ParshaInfo} from "./hebcal.mjs";
+import ParshaInfo, {getCurrentParsha} from "./hebcal.js";
 
 
 initializeApp();
@@ -26,7 +26,7 @@ const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
 // Take the text parameter passed to this HTTP endpoint and insert it into
 // Firestore under the path /messages/:documentId/original
-exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
+exports.today = onRequest({secrets: [apiKey]}, async (req, res) => {
   // get currentParsha name, generate description
   const parshaInfo: ParshaInfo = getCurrentParsha(false);
   const parshaOut = await genParsha(apiKey.value(), parshaInfo.parsha);
@@ -37,10 +37,11 @@ exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
     keyPoints: parshaOut.keyPoints,
     themes: parshaOut.themes,
     characters: parshaOut.characters,
-    lessons: parshaOut.lessons
-};
+    lessons: parshaOut.lessons,
+  };
 
-  logger.log(`Parashat: ${data.name} added now for HebCal ${parshaInfo.parsha}.`);
+  logger.log(`Parashat: ${data.name} added now 
+  for HebCal ${parshaInfo.parsha}.`);
   logger.log(`date: ${parshaInfo.date}`);
 
   // Push the new message into Firestore using the Firebase Admin SDK.
@@ -48,10 +49,11 @@ exports.addTodayParsha = onRequest({secrets: [apiKey]}, async (req, res) => {
     .collection("currentParsha").doc("today")
     .set(data);
   // Send back a message that we've successfully written the message
-  res.json({result: `Parashat: ${data.name} added now for HebCal ${parshaInfo.parsha}.`});
+  res.json({result: `Parashat: ${data.name} added now 
+  for HebCal ${parshaInfo.parsha}.`});
 });
 
-exports.genParshaDaily = onSchedule({schedule: "every day 00:00",
+exports.daily = onSchedule({schedule: "every day 00:00",
   secrets: [apiKey]},
 async (event:ScheduledEvent) => {
   // get currentParsha name, generate description
@@ -64,8 +66,8 @@ async (event:ScheduledEvent) => {
     keyPoints: parshaOut.keyPoints,
     themes: parshaOut.themes,
     characters: parshaOut.characters,
-    lessons: parshaOut.lessons
-};
+    lessons: parshaOut.lessons,
+  };
 
   // Push the new message into Firestore using the Firebase Admin SDK.
   await db

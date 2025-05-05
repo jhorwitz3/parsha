@@ -33,11 +33,13 @@ export const genParsha = async (apiKey: string, parshaName: string) => {
     async () => {
       const {output} = await ai.generate({
         model: gemini20Flash,
-        prompt: `For the Torah parsha named "${parshaName}", please provide the following information in a structured format:
+        prompt: `For the Torah parsha named "${parshaName}", please 
+        provide the following information in a structured format:
 
 1. The exact name of this parsha
 2. A brief summary (2-3 sentences) of what this parsha is about
-3. 5-7 bullet points describing the key events in the parsha (each point should be a single sentence)
+3. 5-7 bullet points describing the key events in the parsha 
+(each point should be a single sentence)
 4. 3-5 bullet points about the main themes of the parsha
 5. For each key character in the parsha, provide:
    - Their name
@@ -45,8 +47,10 @@ export const genParsha = async (apiKey: string, parshaName: string) => {
    - 2-4 bullet points about their key actions or role in this specific parsha
 6. 3-5 bullet points about lessons or messages we can learn from this parsha
 
-Format all bullet points as simple, clear statements that would display well in a mobile app.
-Each bullet point should be concise (preferably under 15 words) and focused on one idea.`,
+Format all bullet points as simple, clear statements that would 
+display well in a mobile app.
+Each bullet point should be concise (preferably under 15 words) 
+and focused on one idea.`,
         output: {schema: ParshaSchema},
       });
       if (output == null) {

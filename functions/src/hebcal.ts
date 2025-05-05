@@ -3,11 +3,13 @@ import {HDate, Sedra} from "@hebcal/core";
 /**
  * Interface for parsha information response
  */
-export interface ParshaInfo {
+interface ParshaInfo {
   date: string;
   hebrewDate: string;
-  parsha: string;
+  parsha: string
 }
+
+export default ParshaInfo;
 
 /**
  * Gets the current week's Torah portion (parsha)
