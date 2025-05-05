@@ -37,6 +37,7 @@ export const genParsha = async (apiKey: string, parshaName: string) => {
         provide the following information in a structured format:
 
 1. The exact name of this parsha
+Do not include the word 'parashat' in the name
 2. A brief summary (2-3 sentences) of what this parsha is about
 3. 5-7 bullet points describing the key events in the parsha 
 (each point should be a single sentence)
