@@ -6,18 +6,26 @@ final ThemeData appTheme = ThemeData(
         surface: Color(0xff090343),
         onSurface: Color(0xff090343),
         onPrimary: Color(0xff090343),
-        secondary: Colors.white,
-        onSecondary: Colors.white,
+        secondary: Color(0xffF4F4FB),
+        onSecondary: Color(0xffF4F4FB),
         primary: Color(0xff086796),
         onError: Colors.red,
         error: Colors.red),
     useMaterial3: true,
     textTheme: const TextTheme(
         displayLarge: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 48),
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 48),
         displayMedium: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 18),
         labelLarge: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 24),
         labelMedium: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)));
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 18)));

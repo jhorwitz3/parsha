@@ -14,18 +14,15 @@ class KeyPointsScreen extends ConsumerWidget {
 
     return switch (parsha) {
       AsyncData(:final value) => SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ScreenTitle(title: 'Key Points'),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-                child: UnorderedList(
-                  texts: value.keyPoints,
-                  light: true,
-                ),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ScreenTitle(title: 'Key Points'),
+                UnorderedList(texts: value.keyPoints),
+              ],
+            ),
           ),
         ),
       AsyncError() => const Text('Oops, something unexpected happened'),

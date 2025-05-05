@@ -13,15 +13,16 @@ class CharacterScreen extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
 
     return switch (parsha) {
-      AsyncData(:final value) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ScreenTitle(title: 'Characters'),
-            Padding(
-                padding: const EdgeInsets.all(24),
-                child: UnorderedList(
-                    texts: value.characters.map((char) => char.name).toList())),
-          ],
+      AsyncData(:final value) => Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ScreenTitle(title: 'Characters'),
+              UnorderedList(
+                  texts: value.characters.map((char) => char.name).toList()),
+            ],
+          ),
         ),
       AsyncError() => const Text('Oops, something unexpected happened'),
       _ => const CircularProgressIndicator(),
