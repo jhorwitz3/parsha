@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
+import 'package:parsha/widgets/list.dart';
+import 'package:parsha/widgets/text.dart';
 
-class DescriptionScreen extends ConsumerWidget {
-  const DescriptionScreen({super.key});
+class KeyPointsScreen extends ConsumerWidget {
+  const KeyPointsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,21 +17,12 @@ class DescriptionScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
-                child: Text(
-                  value.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge!
-                      .copyWith(fontSize: 36),
-                ),
-              ),
+              const ScreenTitle(title: 'Key Points'),
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-                child: Text(
-                  value.summary,
-                  style: Theme.of(context).textTheme.labelMedium,
+                child: UnorderedList(
+                  texts: value.keyPoints,
+                  light: true,
                 ),
               ),
             ],
