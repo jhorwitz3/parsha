@@ -4,6 +4,7 @@ import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/screens/characters.dart';
 import 'package:parsha/screens/keys.dart';
+import 'package:parsha/screens/lessons.dart';
 import 'package:parsha/screens/summary.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -65,9 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
                 const KeyPointsScreen(),
                 const CharacterScreen(),
-                Center(
-                    child: Text('Coming soon!',
-                        style: Theme.of(context).textTheme.displayMedium)),
+                const LessonScreen(),
               ],
             ),
           ),
