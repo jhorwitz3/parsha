@@ -6,6 +6,7 @@ import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
+import 'package:parsha/tools/time.dart';
 import 'firebase_options.dart';
 // ...
 
@@ -40,7 +41,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
-
+    String todayDate = TimeTools().todayDate();
     return Scaffold(
       body: Center(
         child: Column(
@@ -50,7 +51,7 @@ class MyHomePage extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
               child: Text(
-                'Parashat',
+                todayDate,
                 style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
@@ -67,7 +68,8 @@ class MyHomePage extends ConsumerWidget {
             },
             Center(
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary),
                   onPressed: () => Navigator.of(context).pushNamed('/home'),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

@@ -7,7 +7,7 @@ class ScreenTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 60, 24, 24),
+      padding: const EdgeInsets.fromLTRB(8, 24, 24, 24),
       child: Text(
         title,
         style: Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 36),

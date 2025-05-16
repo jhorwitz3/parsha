@@ -6,7 +6,10 @@ import 'package:parsha/widgets/list.dart';
 import 'package:parsha/widgets/text.dart';
 
 class SummaryScreen extends ConsumerWidget {
-  const SummaryScreen({super.key});
+  const SummaryScreen(
+      {super.key, required this.tabController, required this.tabIndex});
+  final TabController tabController;
+  final int tabIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,9 +31,10 @@ class SummaryScreen extends ConsumerWidget {
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.all(16)),
+                          padding: const EdgeInsets.all(16)),
                       onPressed: () {
                         debugPrint('Go to Key points');
+                        tabController.animateTo(tabIndex + 1);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
