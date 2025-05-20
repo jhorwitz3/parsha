@@ -12,14 +12,15 @@
 import {onRequest} from "firebase-functions/https";
 import {getFirestore} from "firebase-admin/firestore";
 import {defineSecret} from "firebase-functions/params";
-import {initializeApp} from "firebase-admin/app";
+import {initializeApp, getApps} from "firebase-admin/app";
 import {genParsha} from "./flow.js";
 import {ScheduledEvent, onSchedule} from "firebase-functions/scheduler";
 import {logger} from "firebase-functions";
 import ParshaInfo, {getCurrentParsha} from "./hebcal.js";
+import {generateImageUrlAndSaveToFirestore, ImageGenerationResult} from "./image.js";
 
 
-initializeApp();
+if (!getApps().length) initializeApp();
 const db = getFirestore();
 const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
@@ -78,4 +79,7 @@ async (event:ScheduledEvent) => {
   logger.log(`Parashat: ${data.name} added now.`);
 });
 
-
+exports.genImageUrl = onRequest({secrets: [apiKey]}, async (req, res) => {
+  const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore("make an image of an apple", "images");
+  res.json({result: `Parashat: ${imageResult.documentId} added now.`});
+});
