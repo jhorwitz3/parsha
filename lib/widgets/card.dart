@@ -48,7 +48,7 @@ class ParshaCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "Parashat Behar-Bechukotai discusses the laws of the Sabbatical and Jubilee years, emphasizing land rest and social justice. It also outlines the blessings for obeying God's commandments and the curses for disobedience, highlighting the consequences of our actions. This parsha teaches about treating others fairly and the importance of following God's laws for a prosperous society.",
+                    text,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ),
