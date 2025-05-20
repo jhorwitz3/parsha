@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/screens/characters.dart';
-import 'package:parsha/screens/keys.dart';
-import 'package:parsha/screens/lessons.dart';
 import 'package:parsha/screens/summary.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -20,7 +18,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void initState() {
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -30,7 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return switch (parsha) {
       AsyncError() => const Text('Oops, something unexpected happened'),
       AsyncData(:final value) => DefaultTabController(
-          length: 4,
+          length: 2,
           child: Scaffold(
             appBar: AppBar(
               centerTitle: true,
@@ -47,13 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     icon: Icon(Icons.menu_book,
                         color: Theme.of(context).colorScheme.secondary)),
                 Tab(
-                    icon: Icon(Icons.key,
-                        color: Theme.of(context).colorScheme.secondary)),
-                Tab(
                     icon: Icon(Icons.people,
-                        color: Theme.of(context).colorScheme.secondary)),
-                Tab(
-                    icon: Icon(Icons.chat,
                         color: Theme.of(context).colorScheme.secondary)),
               ],
             ),
@@ -64,9 +56,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   tabController: tabController,
                   tabIndex: 0,
                 ),
-                const KeyPointsScreen(),
                 const CharacterScreen(),
-                const LessonScreen(),
               ],
             ),
           ),

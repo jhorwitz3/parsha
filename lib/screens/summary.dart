@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
-import 'package:parsha/widgets/list.dart';
-import 'package:parsha/widgets/text.dart';
+import 'package:parsha/widgets/card.dart';
 
 class SummaryScreen extends ConsumerWidget {
   const SummaryScreen(
@@ -22,29 +21,11 @@ class SummaryScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const ScreenTitle(title: 'Summary'),
-                UnorderedListItem(text: value.summary),
-                Padding(
-                  padding: const EdgeInsets.only(top: 48.0),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.all(16)),
-                      onPressed: () {
-                        debugPrint('Go to Key points');
-                        tabController.animateTo(tabIndex + 1);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Next',
-                            style: Theme.of(context).textTheme.displayMedium,
-                          ),
-                        ],
-                      )),
+                ParshaCard(
+                  category: 'Summary',
+                  index: 1,
+                  indexLength: 1,
+                  text: value.summary,
                 )
               ],
             ),
