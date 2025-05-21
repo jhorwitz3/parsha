@@ -55,18 +55,16 @@ const clientOptions = {
 const predictionServiceClient = new PredictionServiceClient(clientOptions);
 
 /**
- * Generates an image using Google Vertex AI Imagen and saves it to Firestore
+ * Generates an image using Google Vertex AI Imagen
  *
  * @param {string} prompt - The text prompt for image generation
- * @param {string} collectionName - Firestore collection to save the image data
  * @param {AdditionalImageData} additionalData - Any additional data to store with the image
  * @return {Promise<ImageGenerationResult>} The Firestore document reference and generation details
  */
-async function generateImageAndSaveToFirestore(
+async function generateImage(
   prompt: string,
-  collectionName: string,
   additionalData: AdditionalImageData = {}
-): Promise<ImageGenerationResult> {
+): Promise<protobuf.common.IValue> {
   try {
     console.log(`Generating image for prompt: "${prompt}"`);
 
@@ -109,6 +107,29 @@ async function generateImageAndSaveToFirestore(
 
     // Get the base64 image data from the first prediction
     const prediction = predictions[0];
+
+    return prediction as protobuf.common.IValue;
+  } catch (error) {
+    console.error("Error generating or saving image:", error);
+    throw error;
+  }
+}
+
+/**
+ * Generates an image using Google Vertex AI Imagen and saves it to Firestore
+ *
+ * @param {string} prompt - The text prompt for image generation
+ * @param {string} collectionName - Firestore collection to save the image data
+ * @param {AdditionalImageData} additionalData - Any additional data to store with the image
+ * @return {Promise<ImageGenerationResult>} The Firestore document reference and generation details
+ */
+async function generateImageAndSaveToFirestore(
+  prompt: string,
+  collectionName: string,
+  additionalData: AdditionalImageData = {}
+): Promise<ImageGenerationResult> {
+  try {
+    const prediction = await generateImage(prompt, additionalData);
     const imageData = prediction.structValue!.fields!.bytesBase64Encoded.stringValue;
 
     // Create a document in Firestore
@@ -153,21 +174,11 @@ async function generateImageUrlAndSaveToFirestore(
 ): Promise<ImageGenerationResult> {
   try {
     // Generate the image and get base64 data
-    const result = await generateImageAndSaveToFirestore(
-      prompt,
-      "temp-collection",
-      additionalData
-    );
+    const prediction = await generateImage(prompt, additionalData);
+    const imageData = prediction.structValue!.fields!.bytesBase64Encoded.stringValue;
 
-    // Retrieve the base64 data from the temp collection
-    const tempDoc = await firestore
-      .collection("temp-collection")
-      .doc(result.documentId)
-      .get();
-    const imageData = tempDoc.data()?.imageData;
-
-    if (!imageData) {
-      throw new Error("Failed to retrieve image data");
+    if (imageData == null) {
+      console.error("null image");
     }
 
     // Generate a unique filename
@@ -180,13 +191,10 @@ async function generateImageUrlAndSaveToFirestore(
 
     // Save to Storage and get the URL
     const {filePath, publicUrl} = await saveImageToStorage(
-      imageData,
+      imageData!,
       folderPath,
       fileName
     );
-
-    // Delete the temporary document
-    await firestore.collection("temp-collection").doc(result.documentId).delete();
 
     // Save URL to Firestore instead of base64 data
     const docData = {
