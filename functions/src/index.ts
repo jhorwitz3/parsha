@@ -91,7 +91,7 @@ exports.genImageUrl = onRequest({secrets: [apiKey], timeoutSeconds: 500, memory:
 
   for (const theme of parsha.themes) {
     const prompt = `Generate an image that illustrates the theme of ${theme} in ${parsha.name}`;
-    const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, theme);
+    const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "themes", theme);
     results.push(imageResult.imageUrl ?? "fail");
     await setTimeout(65000); // sleep for 65 seconds to avoid quota of 1 query per minute
   }

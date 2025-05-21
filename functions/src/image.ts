@@ -59,7 +59,7 @@ const predictionServiceClient = new PredictionServiceClient(clientOptions);
  *
  * @param {string} prompt - The text prompt for image generation
  * @param {AdditionalImageData} additionalData - Any additional data to store with the image
- * @return {Promise<ImageGenerationResult>} The Firestore document reference and generation details
+ * @return {Promise<protobuf.common.IValue>} The prediction from Vertex AI
  */
 async function generateImage(
   prompt: string,
@@ -115,20 +115,20 @@ async function generateImage(
   }
 }
 
-
 /**
- * Alternative function to save image URL instead of base64 data
- * Use this if your Vertex AI setup returns URLs or if you want to save
- * the image to Cloud Storage first
+ * Generates an image, saves it to Cloud Storage, and stores the metadata in Firestore
+ * at a specific document path
  *
  * @param {string} prompt - The text prompt for image generation
- * @param {string} collectionName - Firestore collection to save the image data
+ * @param {string} collectionName - Firestore collection name
+ * @param {string} documentId - Specific document ID to use in Firestore (optional)
  * @param {AdditionalImageData} additionalData - Any additional data to store
  * @return {Promise<ImageGenerationResult>} The result of the image generation
  */
 async function generateImageUrlAndSaveToFirestore(
   prompt: string,
   collectionName: string,
+  documentId?: string,
   additionalData: AdditionalImageData = {}
 ): Promise<ImageGenerationResult> {
   try {
@@ -138,6 +138,7 @@ async function generateImageUrlAndSaveToFirestore(
 
     if (imageData == null) {
       console.error("null image");
+      throw new Error("Generated image data was null");
     }
 
     // Generate a unique filename
@@ -150,7 +151,7 @@ async function generateImageUrlAndSaveToFirestore(
 
     // Save to Storage and get the URL
     const {filePath, publicUrl} = await saveImageToStorage(
-      imageData!,
+      imageData,
       folderPath,
       fileName
     );
@@ -164,17 +165,29 @@ async function generateImageUrlAndSaveToFirestore(
       ...additionalData,
     };
 
-    // Save to Firestore
+    // Save to Firestore with specified document ID if provided
     const collectionRef = firestore.collection(collectionName);
-    const docRef = await collectionRef.add(docData);
+    let resultDocId: string;
 
-    console.log(`Image URL successfully saved to Firestore with ID: ${docRef.id}`);
+    if (documentId) {
+      // Use the specified document ID
+      const docRef = collectionRef.doc(documentId);
+      await docRef.set(docData);
+      resultDocId = documentId;
+      console.log(`Image URL saved to Firestore with specified ID: ${documentId}`);
+    } else {
+      // Let Firestore auto-generate a document ID
+      const docRef = await collectionRef.add(docData);
+      resultDocId = docRef.id;
+      console.log(`Image URL saved to Firestore with auto-generated ID: ${resultDocId}`);
+    }
 
     return {
       success: true,
-      documentId: docRef.id,
+      documentId: resultDocId,
       prompt,
       imageUrl: publicUrl,
+      storagePath: filePath,
     };
   } catch (error) {
     console.error("Error generating or saving image URL:", error);
@@ -184,7 +197,6 @@ async function generateImageUrlAndSaveToFirestore(
 
 /**
  * Utility function to save generated image to Cloud Storage
- * More appropriate for large images than storing in Firestore
  *
  * @param {string} imageBase64 - Base64-encoded image data
  * @param {string} folderPath - Storage folder path
@@ -222,111 +234,8 @@ async function saveImageToStorage(
   return {filePath, publicUrl};
 }
 
-/**
- * Enhanced function that stores image data in Firebase Storage instead of Firestore
- * and only saves the reference URL in Firestore
- *
- * @param {string} prompt - The text prompt for image generation
- * @param {string} collectionName - Firestore collection to save the reference
- * @param {AdditionalImageData} additionalData - Any additional data to store
- * @return {Promise<ImageGenerationResult>} The result of the image generation
- */
-async function generateImageAndSaveToStorage(
-  prompt: string,
-  collectionName: string,
-  additionalData: AdditionalImageData = {}
-): Promise<ImageGenerationResult> {
-  try {
-    // Configure the endpoint
-    const endpoint =
-      `projects/${projectId}/locations/${location}/publishers/google/models/imagen-3.0-generate-001`;
-
-    // Create prompt instance
-    const promptText = {prompt};
-    const instanceValue = helpers.toValue(promptText);
-    const instances = [instanceValue] as protobuf.common.IValue[];
-
-    // Set parameters for image generation
-    const parameter = {
-      sampleCount: 1,
-      aspectRatio: additionalData.imageSize ?
-        `${additionalData.imageSize.width}:${additionalData.imageSize.height}` :
-        "1:1",
-      safetyFilterLevel: "block_some",
-      personGeneration: "allow_adult",
-    };
-
-    const parameters = helpers.toValue(parameter);
-
-    // Create request
-    const request = {
-      endpoint,
-      instances,
-      parameters,
-    };
-
-    // Make prediction request
-    const predictResponse = await predictionServiceClient.predict(request);
-    const response = predictResponse[0];
-    const predictions = response.predictions;
-
-    // Check if we have a valid response
-    if (!predictions || predictions.length === 0) {
-      throw new Error("No image was generated");
-    }
-
-    // Get the base64 image data from the first prediction
-    const prediction = predictions[0];
-    const imageBase64 = prediction.structValue!.fields!.bytesBase64Encoded.stringValue;
-
-    // Generate a unique filename
-    const fileName =
-      `img_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-
-    // Create folder path (optional: organize by user/date)
-    const userId = additionalData.userId || "anonymous";
-    const folderPath = `generated-images/${userId}`;
-
-    // Save the image to Firebase Storage
-    const {filePath, publicUrl} = await saveImageToStorage(
-      imageBase64!,
-      folderPath,
-      fileName
-    );
-
-    // Create a document in Firestore with just the image reference
-    const docData = {
-      prompt,
-      imageUrl: publicUrl,
-      storagePath: filePath,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      ...additionalData,
-    };
-
-    // Save to Firestore
-    const collectionRef = firestore.collection(collectionName);
-    const docRef = await collectionRef.add(docData);
-
-    console.log(
-      `Image reference successfully saved to Firestore with ID: ${docRef.id}`
-    );
-
-    return {
-      success: true,
-      documentId: docRef.id,
-      imageUrl: publicUrl,
-      storagePath: filePath,
-      prompt,
-    };
-  } catch (error) {
-    console.error("Error generating or saving image:", error);
-    throw error;
-  }
-}
-
 // Export the functions
 export {
   generateImageUrlAndSaveToFirestore,
-  generateImageAndSaveToStorage,
   ImageGenerationResult,
 };
