@@ -38,7 +38,6 @@ class SummaryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
-
     switch (parsha) {
       case AsyncData(:final value):
         List<ParshaCard> cards =
