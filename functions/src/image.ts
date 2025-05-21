@@ -115,47 +115,6 @@ async function generateImage(
   }
 }
 
-/**
- * Generates an image using Google Vertex AI Imagen and saves it to Firestore
- *
- * @param {string} prompt - The text prompt for image generation
- * @param {string} collectionName - Firestore collection to save the image data
- * @param {AdditionalImageData} additionalData - Any additional data to store with the image
- * @return {Promise<ImageGenerationResult>} The Firestore document reference and generation details
- */
-async function generateImageAndSaveToFirestore(
-  prompt: string,
-  collectionName: string,
-  additionalData: AdditionalImageData = {}
-): Promise<ImageGenerationResult> {
-  try {
-    const prediction = await generateImage(prompt, additionalData);
-    const imageData = prediction.structValue!.fields!.bytesBase64Encoded.stringValue;
-
-    // Create a document in Firestore
-    const docData = {
-      prompt,
-      imageData,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      ...additionalData,
-    };
-
-    // Save to Firestore
-    const collectionRef = firestore.collection(collectionName);
-    const docRef = await collectionRef.add(docData);
-
-    console.log(`Image successfully saved to Firestore with ID: ${docRef.id}`);
-
-    return {
-      success: true,
-      documentId: docRef.id,
-      prompt,
-    };
-  } catch (error) {
-    console.error("Error generating or saving image:", error);
-    throw error;
-  }
-}
 
 /**
  * Alternative function to save image URL instead of base64 data
@@ -367,7 +326,6 @@ async function generateImageAndSaveToStorage(
 
 // Export the functions
 export {
-  generateImageAndSaveToFirestore,
   generateImageUrlAndSaveToFirestore,
   generateImageAndSaveToStorage,
   ImageGenerationResult,
