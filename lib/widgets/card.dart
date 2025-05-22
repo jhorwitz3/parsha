@@ -28,6 +28,9 @@ class ParshaCard extends ConsumerWidget {
                   child: Skeletonizer.zone(
                     child: Image.network(
                       value.containsKey(key) ? value[key]! : '',
+                      height: 300,
+                      width: 350,
+                      fit: BoxFit.fill,
                       errorBuilder: (context, error, stackTrace) => SizedBox(
                         height: 300,
                         width: 350,
@@ -61,7 +64,7 @@ class ParshaCard extends ConsumerWidget {
                   //   color: Theme.of(context).colorScheme.primary,
                   // )
                 ],
-              ),
+              )
             ],
           ),
         );

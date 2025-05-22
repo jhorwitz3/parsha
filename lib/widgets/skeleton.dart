@@ -6,14 +6,18 @@ class SkeletonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Skeletonizer(
-        child: Column(
-      children: [
-        SizedBox(
-          height: 300,
-          width: 350,
-        )
-      ],
+    return const Skeletonizer.zone(
+        child: Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Bone(
+            height: 300,
+            width: 350,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          )
+        ],
+      ),
     ));
   }
 }
