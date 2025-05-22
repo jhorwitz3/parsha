@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/widgets/carousel.dart';
+import 'package:parsha/widgets/skeleton.dart';
 
 class SummaryScreen extends ConsumerWidget {
   const SummaryScreen(
@@ -15,7 +16,7 @@ class SummaryScreen extends ConsumerWidget {
 
     //summary
     sliders.add(CarouselWithIndicator(
-        category: 'Summary', items: [parsha.summary], aspectRatio: 0.65));
+        category: 'Summary', items: [parsha.summary], aspectRatio: 0.6));
 
     //key points
     sliders.add(
@@ -57,7 +58,7 @@ class SummaryScreen extends ConsumerWidget {
       case AsyncError():
         return const Text('Oops, something unexpected happened');
       default:
-        return const CircularProgressIndicator();
+        return const SkeletonCard();
     }
   }
 }

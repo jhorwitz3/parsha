@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/providers/image_provider.dart';
+import 'package:parsha/widgets/skeleton.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ParshaCard extends ConsumerWidget {
   const ParshaCard({super.key, required this.category, required this.text});
@@ -23,14 +25,25 @@ class ParshaCard extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    value.containsKey(key) ? value[key]! : '',
-                    errorBuilder: (context, error, stackTrace) => SizedBox(
-                      height: 350,
-                      width: 350,
-                      child: Container(
-                          color: Colors.grey,
-                          child: const Icon(Icons.question_mark)),
+                  child: Skeletonizer.zone(
+                    child: Image.network(
+                      value.containsKey(key) ? value[key]! : '',
+                      errorBuilder: (context, error, stackTrace) => SizedBox(
+                        height: 300,
+                        width: 350,
+                        child: Container(
+                            color: Colors.grey,
+                            child: const Icon(Icons.question_mark)),
+                      ),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return const Bone(
+                          height: 300,
+                          width: 350,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -55,7 +68,7 @@ class ParshaCard extends ConsumerWidget {
       case AsyncError():
         return const Text('Oops, something unexpected happened');
       default:
-        return const CircularProgressIndicator();
+        return const SkeletonCard();
     }
   }
 }
