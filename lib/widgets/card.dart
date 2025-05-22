@@ -4,8 +4,9 @@ import 'package:parsha/providers/image_provider.dart';
 import 'package:parsha/widgets/skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ParshaCard extends ConsumerWidget {
-  const ParshaCard({super.key, required this.category, required this.text});
+class ParshaCardContent extends ConsumerWidget {
+  const ParshaCardContent(
+      {super.key, required this.category, required this.text});
   final String category;
   final String text;
 
@@ -20,37 +21,7 @@ class ParshaCard extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16.0, 8, 16, 16),
           child: Column(
             children: [
-              //TODO replace with image
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Skeletonizer.zone(
-                    child: Image.network(
-                      value.containsKey(key) ? value[key]! : '',
-                      height: 300,
-                      width: 350,
-                      fit: BoxFit.fill,
-                      errorBuilder: (context, error, stackTrace) => SizedBox(
-                        height: 300,
-                        width: 350,
-                        child: Container(
-                            color: Colors.grey,
-                            child: const Icon(Icons.question_mark)),
-                      ),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return const Bone(
-                          height: 300,
-                          width: 350,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
+              ImageWidget(imageKey: key, imageMap: value),
               Row(
                 children: [
                   Expanded(
@@ -73,5 +44,45 @@ class ParshaCard extends ConsumerWidget {
       default:
         return const SkeletonCard();
     }
+  }
+}
+
+class ImageWidget extends StatelessWidget {
+  const ImageWidget(
+      {super.key, required this.imageKey, required this.imageMap});
+  final Map<String, String> imageMap;
+  final String imageKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Skeletonizer.zone(
+          child: Image.network(
+            imageMap.containsKey(imageKey) ? imageMap[imageKey]! : '',
+            height: 300,
+            width: 350,
+            fit: BoxFit.fill,
+            errorBuilder: (context, error, stackTrace) => SizedBox(
+              height: 300,
+              width: 350,
+              child: Container(
+                  color: Colors.grey, child: const Icon(Icons.question_mark)),
+            ),
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return const Bone(
+                height: 300,
+                width: 350,
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

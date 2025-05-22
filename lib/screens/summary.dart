@@ -11,29 +11,28 @@ class SummaryScreen extends ConsumerWidget {
   final TabController tabController;
   final int tabIndex;
 
-  List<CarouselWithIndicator> _buildSlidersFromData(Parsha parsha) {
-    List<CarouselWithIndicator> sliders = [];
+  List<CarouselCard> _buildSlidersFromData(Parsha parsha) {
+    List<CarouselCard> sliders = [];
 
     //summary
-    sliders.add(CarouselWithIndicator(
+    sliders.add(CarouselCard(
         category: 'Summary', items: [parsha.summary], aspectRatio: 0.6));
 
     //key points
     sliders.add(
-      CarouselWithIndicator(
+      CarouselCard(
           category: 'Key Points', items: parsha.keyPoints, aspectRatio: 0.8),
     );
 
     //lessons
     sliders.add(
-      CarouselWithIndicator(
+      CarouselCard(
           category: 'Lessons', items: parsha.lessons, aspectRatio: 0.8),
     );
 
     //themes
     sliders.add(
-      CarouselWithIndicator(
-          category: 'Themes', items: parsha.themes, aspectRatio: 0.8),
+      CarouselCard(category: 'Themes', items: parsha.themes, aspectRatio: 0.8),
     );
 
     return sliders;
@@ -44,7 +43,7 @@ class SummaryScreen extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
     switch (parsha) {
       case AsyncData(:final value):
-        List<CarouselWithIndicator> cards = _buildSlidersFromData(value);
+        List<CarouselCard> cards = _buildSlidersFromData(value);
 
         return SingleChildScrollView(
           child: Padding(
