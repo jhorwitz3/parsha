@@ -1,26 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/models/parsha.dart';
-import 'package:parsha/providers/parsha_provider.dart';
-import 'package:parsha/widgets/list.dart';
-import 'package:parsha/widgets/text.dart';
+import 'package:parsha/providers/image_provider.dart';
 
-class CharacterScreen extends ConsumerWidget {
-  const CharacterScreen({super.key});
+class FavoritesScreen extends ConsumerWidget {
+  const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
+    final AsyncValue<Map<String, String>> imageMap = ref.watch(imageProvider);
 
-    return switch (parsha) {
+    return switch (imageMap) {
       AsyncData(:final value) => Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ScreenTitle(title: 'Characters'),
-              UnorderedList(
-                  texts: value.characters.map((char) => char.name).toList()),
+          child: GridView.count(
+            primary: false,
+            padding: const EdgeInsets.all(20),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 2,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[100],
+                child: const Text("He'd have you all unravel at the"),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[200],
+                child: Image.network(value.values.first),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[300],
+                child: const Text('Sound of screams but the'),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[400],
+                child: const Text('Who scream'),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[500],
+                child: const Text('Revolution is coming...'),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.teal[600],
+                child: const Text('Revolution, they...'),
+              ),
             ],
           ),
         ),

@@ -45,7 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     icon: Icon(Icons.menu_book,
                         color: Theme.of(context).colorScheme.secondary)),
                 Tab(
-                    icon: Icon(Icons.people,
+                    icon: Icon(Icons.favorite,
                         color: Theme.of(context).colorScheme.secondary)),
               ],
             ),
@@ -56,7 +56,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   tabController: tabController,
                   tabIndex: 0,
                 ),
-                const CharacterScreen(),
+                const FavoritesScreen(),
               ],
             ),
           ),
