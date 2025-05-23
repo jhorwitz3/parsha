@@ -18,26 +18,18 @@ import {ScheduledEvent, onSchedule} from "firebase-functions/scheduler";
 import {logger} from "firebase-functions";
 import ParshaInfo, {getCurrentParsha} from "./hebcal.js";
 import {generateImageUrlAndSaveToFirestore, ImageGenerationResult} from "./image.js";
-import {Parsha, getTodaysParsha} from "./db.js";
+import {Parsha} from "./db.js";
 import {setTimeout} from "timers/promises";
+import {ParshaWithImages, StringImagePair} from "./schema.js";
 
 if (!getApps().length) initializeApp();
 const db = getFirestore();
 const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
-const genParshaSummary = async (apiKey: any):Promise<string> => {
+const genParshaSummary = async (apiKey: any):Promise<Parsha> => {
   // get currentParsha name, generate description
   const parshaInfo: ParshaInfo = getCurrentParsha(false);
-  const parshaOut = await genParsha(apiKey.value(), parshaInfo.parsha);
-
-  const data = {
-    name: parshaOut.name,
-    summary: parshaOut.summary,
-    keyPoints: parshaOut.keyPoints,
-    themes: parshaOut.themes,
-    characters: parshaOut.characters,
-    lessons: parshaOut.lessons,
-  };
+  const data: Parsha = await genParsha(apiKey.value(), parshaInfo.parsha);
 
   // Push the new message into Firestore using the Firebase Admin SDK.
   await db
@@ -46,55 +38,100 @@ const genParshaSummary = async (apiKey: any):Promise<string> => {
   // Send back a message that we've successfully written the message
   logger.log(`Parashat: ${data.name} added now.`);
 
-  return data.name;
+  return data;
 };
 
-const genImages = async (apiKey: any): Promise<string[]> => {
-  const parsha:Parsha|null = await getTodaysParsha();
-  if (!parsha) {
-    console.error("Failed to get valid parsha data");
-    return [];
-  }
-
-  const results:string[] = [];
-
+// generate an image from prompt, save to images folder, wait for timeout, return url
+const genImage = async (prompt: string):Promise<string | undefined> => {
   // generate an image for summary
-  const prompt = `Generate an image that illustrates the story of ${parsha.name}`;
-  const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "summary", "image");
-  results.push(imageResult.imageUrl ?? "fail");
+  const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "images");
   await setTimeout(65000); // sleep for 65 seconds to avoid quota of 1 query per minute
+  return imageResult.imageUrl;
+};
 
+const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages> => {
+  // for each piece of the parsha, generate an image and store the URL-string pair in the parshawithimages object
+
+  const parshaWithImages: ParshaWithImages = {
+    name: parsha.name,
+    summary: {string: parsha.summary, url: ""},
+    keyPoints: [],
+    themes: [],
+    characters: parsha.characters,
+    lessons: [],
+  };
+
+  // summary
+  const summaryPrompt = `Generate an image that illustrates the story of ${parsha.name}`;
+  const summaryUrl = await genImage(summaryPrompt);
+  const summaryUrlPair:StringImagePair = {string: parsha.summary, url: summaryUrl??""};
+  parshaWithImages.summary = summaryUrlPair;
+
+  // Push the new message into Firestore using the Firebase Admin SDK after each update
+  await db
+    .collection("currentParshaWithImages").doc("today")
+    .set(parshaWithImages);
+
+  // themes
   // generate an image for each theme
   for (const theme of parsha.themes) {
     const prompt = `Generate an image that illustrates the theme of ${theme} in ${parsha.name}`;
-    const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "themes", theme);
-    results.push(imageResult.imageUrl ?? "fail");
-    await setTimeout(65000); // sleep for 65 seconds to avoid quota of 1 query per minute
+    const themeUrl: string = await genImage(prompt) ?? "fail";
+    parshaWithImages.themes.push({string: theme, url: themeUrl});
   }
 
-  // generate an image for each theme
-  for (const lesson of parsha.lessons) {
-    const prompt = `Generate an image that illustrates the lesson of ${lesson} as described in ${parsha.name}`;
-    const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "lessons", lesson);
-    results.push(imageResult.imageUrl ?? "fail");
-    await setTimeout(65000); // sleep for 65 seconds to avoid quota of 1 query per minute
-  }
+  // Push the new message into Firestore using the Firebase Admin SDK after each update
+  await db
+    .collection("currentParshaWithImages").doc("today")
+    .set(parshaWithImages);
 
-  // generate an image for each theme
+  // keyPoints
+  // generate an image for each keyPoint
   for (const point of parsha.keyPoints) {
     const prompt = `Generate an image that illustrates ${point} as described in ${parsha.name}`;
-    const imageResult:ImageGenerationResult = await generateImageUrlAndSaveToFirestore(prompt, "keyPoints", point);
-    results.push(imageResult.imageUrl ?? "fail");
-    await setTimeout(65000); // sleep for 65 seconds to avoid quota of 1 query per minute
+    const pointUrl: string = await genImage(prompt) ?? "fail";
+    parshaWithImages.themes.push({string: point, url: pointUrl});
   }
 
-  return results;
+  // Push the new message into Firestore using the Firebase Admin SDK after each update
+  await db
+    .collection("currentParshaWithImages").doc("today")
+    .set(parshaWithImages);
+
+  // lessons
+  // generate an image for each lesson
+  for (const lesson of parsha.lessons) {
+    const prompt = `Generate an image that illustrates ${lesson} as described in ${parsha.name}`;
+    const lessonUrl: string = await genImage(prompt) ?? "fail";
+    parshaWithImages.themes.push({string: lesson, url: lessonUrl});
+  }
+
+  // Push the new message into Firestore using the Firebase Admin SDK after each update
+  await db
+    .collection("currentParshaWithImages").doc("today")
+    .set(parshaWithImages);
+
+  return parshaWithImages;
+};
+
+
+const genParshaWithImages = async (apiKey: any):Promise<ParshaWithImages> => {
+  // get currentParsha name, generate description
+  const parshaInfo: ParshaInfo = getCurrentParsha(false);
+  const data: Parsha = await genParsha(apiKey.value(), parshaInfo.parsha);
+
+  const parshaWithImages:ParshaWithImages = await assembleParshaWithImages(data);
+
+  // Send back a message that we've successfully written the message
+  logger.log(`Parashat: ${data.name} added with images.`);
+
+  return parshaWithImages;
 };
 
 exports.today = onRequest({secrets: [apiKey], memory: "1GiB"}, async (req, res) => {
-  const parshaName = await genParshaSummary(apiKey);
+  const parsha:Parsha = await genParshaSummary(apiKey);
   // Send back a message that we've successfully written the message
-  res.json({result: `Parashat: ${parshaName} added to db`});
+  res.json({result: `Parashat: ${parsha.name} added to db`});
 });
 
 exports.daily = onSchedule({schedule: "every day 00:00",
@@ -105,13 +142,14 @@ async (event:ScheduledEvent) => {
 
 // 20 minutes timeout (!!)
 exports.genImageUrl = onRequest({secrets: [apiKey], timeoutSeconds: 1200, memory: "1GiB"}, async (req, res) => {
-  const results = await genImages(apiKey);
-  res.json({result: `Images added with results: ${results} `});
+  const parshaWithImages:ParshaWithImages = await genParshaWithImages(apiKey);
+  res.json({result: `ParshaWithImages added for ${parshaWithImages.name}`});
 });
 
+// 20 minutes timeout (!!)
 exports.dailyImages = onSchedule({schedule: "every day 00:10",
-  secrets: [apiKey], memory: "1GiB"},
+  secrets: [apiKey], memory: "1GiB", timeoutSeconds: 1200},
 async (event:ScheduledEvent) => {
-  const results = await genImages(apiKey);
-  logger.log(`Images added with results: ${results} `);
+  const parshaWithImages:ParshaWithImages = await genParshaWithImages(apiKey);
+  logger.log(`ParshaWithImages added for ${parshaWithImages.name}`);
 });
