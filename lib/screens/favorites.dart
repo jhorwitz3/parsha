@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parsha/models/string_url_pair.dart';
 import 'package:parsha/providers/image_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -8,9 +9,9 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Map<String, String>> imageMap = ref.watch(imageProvider);
+    final AsyncValue<List<StringUrlPair>> imageList = ref.watch(imageProvider);
 
-    return switch (imageMap) {
+    return switch (imageList) {
       AsyncData(:final value) => Padding(
           padding: const EdgeInsets.all(16.0),
           child: GridView.count(
@@ -19,10 +20,10 @@ class FavoritesScreen extends ConsumerWidget {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               crossAxisCount: 2,
-              children: value.values
-                  .map((url) => Skeletonizer.zone(
+              children: value
+                  .map((pair) => Skeletonizer.zone(
                         child: Image.network(
-                          url,
+                          pair.url,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return child;
