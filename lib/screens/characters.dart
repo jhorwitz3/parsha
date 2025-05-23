@@ -37,7 +37,20 @@ class FavoritesScreen extends ConsumerWidget {
                   .toList()),
         ),
       AsyncError() => const Text('Oops, something unexpected happened'),
-      _ => const CircularProgressIndicator(),
+      _ => GridView.count(
+          primary: false,
+          padding: const EdgeInsets.all(20),
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              .map((url) => const Skeletonizer.zone(
+                    child: Bone(
+                      height: 300,
+                      width: 350,
+                    ),
+                  ))
+              .toList()),
     };
   }
 }
