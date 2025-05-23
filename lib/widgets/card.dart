@@ -1,57 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/providers/image_provider.dart';
-import 'package:parsha/widgets/skeleton.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ParshaCardContent extends ConsumerWidget {
-  const ParshaCardContent(
-      {super.key, required this.category, required this.text});
-  final String category;
+class ParshaCardContent extends StatelessWidget {
+  const ParshaCardContent({super.key, required this.url, required this.text});
+  final String url;
   final String text;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Map<String, String>> imageMap = ref.watch(imageProvider);
-    String key = category == 'Summary' ? 'image' : text;
-
-    switch (imageMap) {
-      case AsyncData(:final value):
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8, 16, 16),
-          child: Column(
-            children: [
-              ImageWidget(imageKey: key, imageMap: value),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      text,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ),
-                  // Icon(
-                  //   Icons.arrow_right,
-                  //   color: Theme.of(context).colorScheme.primary,
-                  // )
-                ],
-              )
-            ],
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 8, 16, 16),
+      child: Column(
+        children: [
+          ImageWidget(
+            url: url,
           ),
-        );
-      case AsyncError():
-        return const Text('Oops, something unexpected happened');
-      default:
-        return const SkeletonCard();
-    }
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  text,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+              // Icon(
+              //   Icons.arrow_right,
+              //   color: Theme.of(context).colorScheme.primary,
+              // )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
 class ImageWidget extends StatelessWidget {
-  const ImageWidget(
-      {super.key, required this.imageKey, required this.imageMap});
-  final Map<String, String> imageMap;
-  final String imageKey;
+  const ImageWidget({super.key, required this.url});
+  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +47,7 @@ class ImageWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: Skeletonizer.zone(
           child: Image.network(
-            imageMap.containsKey(imageKey) ? imageMap[imageKey]! : '',
+            url,
             height: 300,
             width: 350,
             fit: BoxFit.fill,

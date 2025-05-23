@@ -1,53 +1,31 @@
-// lib/models/parsha.dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:parsha/models/string_url_pair.dart';
 
-class Parsha {
-  final String name;
-  final String summary;
-  final List<String> keyPoints;
-  final List<String> themes;
-  final List<Character> characters;
-  final List<String> lessons;
+part 'parsha.freezed.dart';
+part 'parsha.g.dart';
 
-  Parsha({
-    required this.name,
-    required this.summary,
-    required this.keyPoints,
-    required this.themes,
-    required this.characters,
-    required this.lessons,
-  });
+@freezed
+class Parsha with _$Parsha {
+  const factory Parsha({
+    required String name,
+    required StringUrlPair summary,
+    required List<StringUrlPair> keyPoints,
+    required List<StringUrlPair> themes,
+    required List<Character> characters,
+    required List<StringUrlPair> lessons,
+  }) = _Parsha;
 
-  factory Parsha.fromJson(Map<String, dynamic> json) {
-    return Parsha(
-      name: json['name'] ?? '',
-      summary: json['summary'] ?? '',
-      keyPoints: List<String>.from(json['keyPoints'] ?? []),
-      themes: List<String>.from(json['themes'] ?? []),
-      characters: List<Character>.from(
-        (json['characters'] ?? [])
-            .map((character) => Character.fromJson(character)),
-      ),
-      lessons: List<String>.from(json['lessons'] ?? []),
-    );
-  }
+  factory Parsha.fromJson(Map<String, dynamic> json) => _$ParshaFromJson(json);
 }
 
-class Character {
-  final String name;
-  final String description;
-  final List<String> keyActions;
+@freezed
+class Character with _$Character {
+  const factory Character({
+    required String name,
+    required String description,
+    required List<String> keyActions,
+  }) = _Character;
 
-  Character({
-    required this.name,
-    required this.description,
-    required this.keyActions,
-  });
-
-  factory Character.fromJson(Map<String, dynamic> json) {
-    return Character(
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      keyActions: List<String>.from(json['keyActions'] ?? []),
-    );
-  }
+  factory Character.fromJson(Map<String, dynamic> json) =>
+      _$CharacterFromJson(json);
 }

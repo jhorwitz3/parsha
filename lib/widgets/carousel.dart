@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/providers/image_provider.dart';
+import 'package:parsha/models/string_url_pair.dart';
 import 'package:parsha/widgets/card.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -11,7 +11,7 @@ class CarouselCard extends StatelessWidget {
       required this.category,
       required this.items,
       required this.aspectRatio});
-  final List<String> items;
+  final List<StringUrlPair> items;
   final String category;
   final double aspectRatio;
 
@@ -39,7 +39,7 @@ class CarouselWidget extends ConsumerStatefulWidget {
       required this.items,
       required this.aspectRatio});
 
-  final List<String> items;
+  final List<StringUrlPair> items;
   final String category;
   final double aspectRatio;
 
@@ -53,7 +53,7 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
 
   List<ParshaCardContent> _buildCards() {
     List<ParshaCardContent> cards = widget.items
-        .map((item) => ParshaCardContent(category: widget.category, text: item))
+        .map((item) => ParshaCardContent(url: item.url, text: item.string))
         .toList();
     return cards;
   }
@@ -61,7 +61,6 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   @override
   Widget build(BuildContext context) {
     List<ParshaCardContent> cards = _buildCards();
-    AsyncValue<Map<String, String>> imageMap = ref.watch(imageProvider);
     return Column(
       children: [
         Padding(
@@ -78,9 +77,7 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                   onPressed: () => SharePlus.instance.share(ShareParams(
                       title: cards[_current].text,
                       subject: cards[_current].text,
-                      uri: Uri.tryParse(imageMap.hasValue
-                          ? imageMap.value![cards[_current].text] ?? ''
-                          : ''))),
+                      uri: Uri.tryParse(cards[_current].url))),
                   icon: Icon(
                     Icons.ios_share,
                     color: Theme.of(context).colorScheme.primary,
