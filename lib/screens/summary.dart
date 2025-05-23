@@ -16,7 +16,7 @@ class SummaryScreen extends ConsumerWidget {
 
     //summary
     sliders.add(CarouselCard(
-        category: 'Summary', items: [parsha.summary], aspectRatio: 0.6));
+        category: 'Summary', items: [parsha.summary], aspectRatio: 0.58));
 
     //key points
     sliders.add(
