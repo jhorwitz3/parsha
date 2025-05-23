@@ -90,7 +90,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   for (const point of parsha.keyPoints) {
     const prompt = `Generate an image that illustrates ${point} as described in ${parsha.name}`;
     const pointUrl: string = await genImage(prompt) ?? "fail";
-    parshaWithImages.themes.push({string: point, url: pointUrl});
+    parshaWithImages.keyPoints.push({string: point, url: pointUrl});
   }
 
   // Push the new message into Firestore using the Firebase Admin SDK after each update
@@ -103,7 +103,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   for (const lesson of parsha.lessons) {
     const prompt = `Generate an image that illustrates ${lesson} as described in ${parsha.name}`;
     const lessonUrl: string = await genImage(prompt) ?? "fail";
-    parshaWithImages.themes.push({string: lesson, url: lessonUrl});
+    parshaWithImages.lessons.push({string: lesson, url: lessonUrl});
   }
 
   // Push the new message into Firestore using the Firebase Admin SDK after each update
