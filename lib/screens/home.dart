@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
-import 'package:parsha/screens/characters.dart';
+import 'package:parsha/screens/favorites.dart';
 import 'package:parsha/screens/summary.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -12,8 +12,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStateMixin {
   late TabController tabController;
 
   @override
@@ -41,12 +40,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             bottomNavigationBar: TabBar(
               controller: tabController,
               tabs: [
-                Tab(
-                    icon: Icon(Icons.menu_book,
-                        color: Theme.of(context).colorScheme.secondary)),
-                Tab(
-                    icon: Icon(Icons.favorite,
-                        color: Theme.of(context).colorScheme.secondary)),
+                Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
+                Tab(icon: Icon(Icons.favorite, color: Theme.of(context).colorScheme.secondary)),
               ],
             ),
             body: TabBarView(
