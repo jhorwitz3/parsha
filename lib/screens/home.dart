@@ -37,12 +37,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 textAlign: TextAlign.center,
               ),
             ),
-            bottomNavigationBar: TabBar(
-              controller: tabController,
-              tabs: [
-                Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
-                Tab(icon: Icon(Icons.favorite, color: Theme.of(context).colorScheme.secondary)),
-              ],
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: TabBar(
+                controller: tabController,
+                tabs: [
+                  Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
+                  Tab(icon: Icon(Icons.favorite, color: Theme.of(context).colorScheme.secondary)),
+                ],
+              ),
             ),
             body: TabBarView(
               controller: tabController,
