@@ -14,6 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
+    name: 'Parsha',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const ProviderScope(child: MyApp()));
@@ -68,8 +69,7 @@ class MyHomePage extends ConsumerWidget {
             },
             Center(
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary),
+                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
                   onPressed: () => Navigator.of(context).pushNamed('/home'),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
