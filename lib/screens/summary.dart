@@ -14,21 +14,21 @@ class SummaryScreen extends ConsumerWidget {
     List<CarouselCard> sliders = [];
 
     //summary
-    sliders.add(CarouselCard(category: 'Summary', items: [parsha.summary], aspectRatio: 0.70));
+    sliders.add(CarouselCard(category: 'Summary', items: [parsha.summary], aspectRatio: 0.5));
 
     //key points
     sliders.add(
-      CarouselCard(category: 'Key Points', items: parsha.keyPoints, aspectRatio: 0.9),
+      CarouselCard(category: 'Key Points', items: parsha.keyPoints, aspectRatio: 0.8),
     );
 
     //lessons
     sliders.add(
-      CarouselCard(category: 'Lessons', items: parsha.lessons, aspectRatio: 0.9),
+      CarouselCard(category: 'Lessons', items: parsha.lessons, aspectRatio: 0.8),
     );
 
     //themes
     sliders.add(
-      CarouselCard(category: 'Themes', items: parsha.themes, aspectRatio: 0.9),
+      CarouselCard(category: 'Themes', items: parsha.themes, aspectRatio: 0.8),
     );
 
     return sliders;
