@@ -4,39 +4,60 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/providers/verification_id_provider.dart';
 
-class PhoneNumberFormScreen extends ConsumerStatefulWidget {
-  const PhoneNumberFormScreen({super.key});
+class PhoneCodeFormScreen extends ConsumerStatefulWidget {
+  const PhoneCodeFormScreen({super.key});
 
   @override
-  ConsumerState<PhoneNumberFormScreen> createState() =>
-      _PhoneNumberFormScreenState();
+  ConsumerState<PhoneCodeFormScreen> createState() =>
+      _PhoneCodeFormScreenState();
 }
 
-class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
+class _PhoneCodeFormScreenState extends ConsumerState<PhoneCodeFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _phoneController = TextEditingController();
+  final _codeController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _codeController.dispose();
     super.dispose();
   }
 
-  String? _validatePhoneNumber(String? value) {
+  String? _validateCode(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a phone number';
+      return 'Please enter a valid code';
     }
 
     // Remove any non-digit characters for validation
     final digitsOnly = value.replaceAll(RegExp(r'[^\d]'), '');
-    if (digitsOnly.length < 10) {
-      return 'Phone number must be at least 10 digits';
-    }
-    if (digitsOnly.length > 15) {
-      return 'Phone number is too long';
+    if (digitsOnly.length != 6) {
+      return 'Code must be 6 digits';
     }
     return null;
+  }
+
+  Future<void> _submitCode() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    // Update the UI - wait for the user to enter the SMS code
+    String smsCode = _codeController.text;
+    String verificationId = ref.read(verificationIdProvider);
+
+    // Create a PhoneAuthCredential with the code
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
+    try {
+      // Sign the user in (or link) with the credential
+      await auth.signInWithCredential(credential);
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) Navigator.of(context).popAndPushNamed('/home');
+    } catch (e) {
+      debugPrint('error: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _onSubmit() async {
@@ -45,52 +66,7 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
         _isLoading = true;
       });
 
-      FirebaseAuth auth = FirebaseAuth.instance;
-
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+1 ${_phoneController.text}',
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          debugPrint('verification completed');
-
-          setState(() {
-            _isLoading = false;
-          });
-          // Sign the user in (or link) with the auto-generated credential
-          await auth.signInWithCredential(credential);
-          if (mounted) Navigator.of(context).popAndPushNamed('/home');
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          debugPrint('verification failed: $e');
-
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification failed: $e')),
-          );
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          debugPrint('code sent');
-          ref.read(verificationIdProvider.notifier).set(verificationId);
-
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).popAndPushNamed('/code');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          debugPrint('autoretrieval timeout');
-
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Failed to retrieve code. ID: $verificationId')));
-        },
-      );
-      debugPrint('Submitted phone number: ${_phoneController.text}');
-
-      await Future.delayed(const Duration(seconds: 2));
+      _submitCode();
     }
   }
 
@@ -106,10 +82,11 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Spacer(),
+
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    'Please enter your phone number',
+                    'Please enter the code you received',
                     style: Theme.of(context)
                         .textTheme
                         .displayMedium
@@ -120,7 +97,7 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
 
                 // Phone number input field
                 TextFormField(
-                  controller: _phoneController,
+                  controller: _codeController,
                   keyboardType: TextInputType.phone,
                   style: Theme.of(context).textTheme.labelMedium,
                   inputFormatters: [
@@ -129,10 +106,10 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
                   ],
                   decoration: InputDecoration(
                     iconColor: Colors.white,
-                    labelText: 'Phone Number',
-                    hintText: '+1 (555) 123-4567',
+                    labelText: 'Code',
+                    hintText: '123456',
                     prefixIcon: const Icon(
-                      Icons.phone,
+                      Icons.calculate,
                       color: Colors.white,
                     ),
                     border: OutlineInputBorder(
@@ -153,7 +130,7 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
                       ),
                     ),
                   ),
-                  validator: _validatePhoneNumber,
+                  validator: _validateCode,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _onSubmit(),
                 ),
