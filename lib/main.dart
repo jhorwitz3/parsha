@@ -4,11 +4,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
+import 'package:parsha/providers/user_provider.dart';
 import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'package:parsha/tools/time.dart';
+import 'package:parsha/widgets/button.dart';
 import 'firebase_options.dart';
-// ...
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,44 +45,59 @@ class MyHomePage extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
     String todayDate = TimeTools().todayDate();
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
-              child: Text(
-                todayDate,
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
+            child: Text(
+              todayDate,
+              style: Theme.of(context).textTheme.displayMedium,
             ),
-            switch (parsha) {
-              AsyncData(:final value) => Padding(
-                  padding: EdgeInsets.fromLTRB(24, 0, 24, height / 4),
-                  child: Text(
-                    value.name,
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
+          ),
+          switch (parsha) {
+            AsyncData(:final value) => Padding(
+                padding: EdgeInsets.fromLTRB(24, 0, 24, height / 4),
+                child: Text(
+                  value.name,
+                  style: Theme.of(context).textTheme.displayLarge,
                 ),
-              AsyncError() => const Text('Oops, something unexpected happened'),
-              _ => const CircularProgressIndicator(),
-            },
-            Center(
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
-                  onPressed: () => Navigator.of(context).pushNamed('/home'),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Learn More',
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
-                  )),
-            )
-          ],
-        ),
+              ),
+            AsyncError() => const Text('Oops, something unexpected happened'),
+            _ => const CircularProgressIndicator(),
+          },
+          const SignInButton()
+        ],
       ),
     );
+  }
+}
+
+class SignInButton extends ConsumerWidget {
+  const SignInButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool isAuthenticated = ref.watch(isAuthenticatedProvider);
+    if (!isAuthenticated) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: WhiteButton(
+              text: 'Create Account',
+              onPressed: () => Navigator.of(context).pushNamed('/phone')),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: WhiteButton(
+              text: "Let's Go",
+              onPressed: () => Navigator.of(context).pushNamed('/home')),
+        ),
+      );
+    }
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:parsha/screens/home.dart';
+import 'package:parsha/screens/phone.dart';
 
 Map<String, WidgetBuilder> routes = {
-  //TITLE SCREEN
-
-  //HOME SCREENS
+  //Routes
   '/home': (context) => const HomeScreen(),
+  '/phone': (context) => const PhoneNumberFormScreen(),
 };

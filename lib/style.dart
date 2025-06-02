@@ -14,7 +14,19 @@ final ThemeData appTheme = ThemeData(
         error: Colors.red),
     useMaterial3: true,
     textTheme: const TextTheme(
-        displayLarge: TextStyle(color: Color(0xffF4F4FB), fontWeight: FontWeight.bold, fontSize: 48),
-        displayMedium: TextStyle(color: Color(0xffF4F4FB), fontWeight: FontWeight.bold, fontSize: 24),
-        labelLarge: TextStyle(color: Color(0xffF4F4FB), fontWeight: FontWeight.bold, fontSize: 48),
-        labelMedium: TextStyle(color: Color(0xffF4F4FB), fontWeight: FontWeight.normal, fontSize: 24)));
+        displayLarge: TextStyle(
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 36),
+        displayMedium: TextStyle(
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 18),
+        labelLarge: TextStyle(
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.bold,
+            fontSize: 36),
+        labelMedium: TextStyle(
+            color: Color(0xffF4F4FB),
+            fontWeight: FontWeight.normal,
+            fontSize: 18)));
