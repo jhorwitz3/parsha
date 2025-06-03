@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/string_url_pair.dart';
-import 'package:parsha/providers/image_provider.dart';
+import 'package:parsha/providers/favorite_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class FavoritesScreen extends ConsumerWidget {
@@ -9,7 +9,8 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<StringUrlPair>> imageList = ref.watch(imageProvider);
+    final AsyncValue<List<StringUrlPair>> imageList =
+        ref.watch(favoriteProvider);
 
     return switch (imageList) {
       AsyncData(:final value) => Padding(

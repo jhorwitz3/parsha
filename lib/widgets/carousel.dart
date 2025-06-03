@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/widgets/card.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -80,6 +81,14 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                       uri: Uri.tryParse(cards[_current].url))),
                   icon: Icon(
                     Icons.ios_share,
+                    color: Theme.of(context).colorScheme.primary,
+                  )),
+              IconButton(
+                  onPressed: () => ref
+                      .read(updateFavoritesProvider.notifier)
+                      .writeStringUrlPair(widget.items[_current]),
+                  icon: Icon(
+                    Icons.favorite,
                     color: Theme.of(context).colorScheme.primary,
                   ))
             ],
