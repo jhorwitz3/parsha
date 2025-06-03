@@ -6,7 +6,7 @@ import 'package:parsha/providers/user_provider.dart';
 
 import 'package:riverpod/riverpod.dart';
 
-final favoriteProvider = FutureProvider.autoDispose((ref) async {
+final futureFavoritesProvider = FutureProvider.autoDispose((ref) async {
   List<StringUrlPair> favorites = await getFavoritesFromDb(ref);
 
   return favorites;
@@ -31,6 +31,16 @@ Future<List<StringUrlPair>> getFavoritesFromDb(Ref ref) async {
   }
   return favorites;
 }
+
+// Provider that provides concrete favoritres
+final favoritesProvider = Provider<List<StringUrlPair>>((ref) {
+  final futureFavorites = ref.watch(futureFavoritesProvider);
+  return futureFavorites.when(
+    data: (favorites) => favorites,
+    loading: () => [],
+    error: (_, __) => [],
+  );
+});
 
 class UpdateFavoritesNotifier extends Notifier<bool> {
   @override

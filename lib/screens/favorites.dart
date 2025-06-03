@@ -10,7 +10,7 @@ class FavoritesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<StringUrlPair>> imageList =
-        ref.watch(favoriteProvider);
+        ref.watch(futureFavoritesProvider);
 
     return switch (imageList) {
       AsyncData(:final value) => Padding(

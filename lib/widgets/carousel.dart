@@ -62,6 +62,9 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   @override
   Widget build(BuildContext context) {
     List<ParshaCardContent> cards = _buildCards();
+    List<StringUrlPair> favorites = ref.watch(favoritesProvider);
+    debugPrint('favorites: ${favorites.length}');
+
     return Column(
       children: [
         Padding(
@@ -84,11 +87,16 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                     color: Theme.of(context).colorScheme.primary,
                   )),
               IconButton(
-                  onPressed: () => ref
-                      .read(updateFavoritesProvider.notifier)
-                      .writeStringUrlPair(widget.items[_current]),
+                  onPressed: () async {
+                    await ref
+                        .read(updateFavoritesProvider.notifier)
+                        .writeStringUrlPair(widget.items[_current]);
+                    ref.invalidate(futureFavoritesProvider);
+                  },
                   icon: Icon(
-                    Icons.favorite,
+                    favorites.contains(widget.items[_current])
+                        ? Icons.favorite
+                        : Icons.favorite_border,
                     color: Theme.of(context).colorScheme.primary,
                   ))
             ],
