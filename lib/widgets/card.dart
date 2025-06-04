@@ -36,8 +36,11 @@ class ParshaCardContent extends StatelessWidget {
 }
 
 class ImageWidget extends StatelessWidget {
-  const ImageWidget({super.key, required this.url});
+  const ImageWidget(
+      {super.key, required this.url, this.height = 300, this.width = 350});
   final String url;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +51,12 @@ class ImageWidget extends StatelessWidget {
         child: Skeletonizer.zone(
           child: Image.network(
             url,
-            height: 300,
-            width: 350,
+            height: height,
+            width: width,
             fit: BoxFit.fill,
             errorBuilder: (context, error, stackTrace) => SizedBox(
-              height: 300,
-              width: 350,
+              height: height,
+              width: width,
               child: Container(
                   color: Colors.grey, child: const Icon(Icons.question_mark)),
             ),
@@ -61,9 +64,9 @@ class ImageWidget extends StatelessWidget {
               if (loadingProgress == null) {
                 return child;
               }
-              return const Bone(
-                height: 300,
-                width: 350,
+              return Bone(
+                height: height,
+                width: width,
               );
             },
           ),
