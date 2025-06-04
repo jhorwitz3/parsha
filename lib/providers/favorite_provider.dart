@@ -79,6 +79,9 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
         debugPrint(
             'Successfully wrote StringUrlPair to collection: ${currentUser.uid}');
       }
+
+      //Refresh favorites
+      ref.invalidate(futureFavoritesProvider);
     } catch (e) {
       debugPrint('Error processing StringUrlPair: $e');
       rethrow;
@@ -111,6 +114,8 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
       } else {
         debugPrint('No matching StringUrlPair found to remove');
       }
+      //Refresh favorites
+      ref.invalidate(futureFavoritesProvider);
     } catch (e) {
       debugPrint('Error removing StringUrlPair: $e');
       rethrow;

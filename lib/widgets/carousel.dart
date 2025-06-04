@@ -91,7 +91,6 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                     await ref
                         .read(updateFavoritesProvider.notifier)
                         .writeStringUrlPair(widget.items[_current]);
-                    ref.invalidate(futureFavoritesProvider);
                   },
                   icon: Icon(
                     favorites.contains(widget.items[_current])
