@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 
 part 'parsha.freezed.dart';
 part 'parsha.g.dart';
@@ -8,11 +8,11 @@ part 'parsha.g.dart';
 class Parsha with _$Parsha {
   const factory Parsha({
     required String name,
-    required StringUrlPair summary,
-    required List<StringUrlPair> keyPoints,
-    required List<StringUrlPair> themes,
+    required StringUrlNameTriplet summary,
+    required List<StringUrlNameTriplet> keyPoints,
+    required List<StringUrlNameTriplet> themes,
     required List<Character> characters,
-    required List<StringUrlPair> lessons,
+    required List<StringUrlNameTriplet> lessons,
   }) = _Parsha;
 
   factory Parsha.fromJson(Map<String, dynamic> json) => _$ParshaFromJson(json);

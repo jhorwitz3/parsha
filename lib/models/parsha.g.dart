@@ -8,18 +8,19 @@ part of 'parsha.dart';
 
 _$ParshaImpl _$$ParshaImplFromJson(Map<String, dynamic> json) => _$ParshaImpl(
       name: json['name'] as String,
-      summary: StringUrlPair.fromJson(json['summary'] as Map<String, dynamic>),
+      summary: StringUrlNameTriplet.fromJson(
+          json['summary'] as Map<String, dynamic>),
       keyPoints: (json['keyPoints'] as List<dynamic>)
-          .map((e) => StringUrlPair.fromJson(e as Map<String, dynamic>))
+          .map((e) => StringUrlNameTriplet.fromJson(e as Map<String, dynamic>))
           .toList(),
       themes: (json['themes'] as List<dynamic>)
-          .map((e) => StringUrlPair.fromJson(e as Map<String, dynamic>))
+          .map((e) => StringUrlNameTriplet.fromJson(e as Map<String, dynamic>))
           .toList(),
       characters: (json['characters'] as List<dynamic>)
           .map((e) => Character.fromJson(e as Map<String, dynamic>))
           .toList(),
       lessons: (json['lessons'] as List<dynamic>)
-          .map((e) => StringUrlPair.fromJson(e as Map<String, dynamic>))
+          .map((e) => StringUrlNameTriplet.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

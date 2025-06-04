@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/providers/single_favorite_provider.dart';
 import 'package:parsha/widgets/card.dart';
@@ -10,11 +10,16 @@ class SingleFavoriteScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    StringUrlPair pair = ref.watch(singleFavoriteProvider);
+    StringUrlNameTriplet triplet = ref.watch(singleFavoriteProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
+        title: Center(
+          child: Text(
+            triplet.name ?? '',
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: () => showDialog(
@@ -33,7 +38,7 @@ class SingleFavoriteScreen extends ConsumerWidget {
                                 onPressed: () async {
                                   await ref
                                       .read(updateFavoritesProvider.notifier)
-                                      .removeStringUrlPair(pair);
+                                      .removeStringUrlPair(triplet);
                                   if (context.mounted) {
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();
@@ -55,22 +60,23 @@ class SingleFavoriteScreen extends ConsumerWidget {
       ),
       body: Container(
         color: Colors.black,
-        child: Column(
+        child: ListView(
           children: [
             Center(
                 child: ImageWidget(
-              url: pair.url,
+              url: triplet.url,
               height: 400,
               width: 400,
             )),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                pair.string,
-                style: Theme.of(context).textTheme.labelMedium,
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  triplet.string,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
               ),
             ),
-            const Spacer()
           ],
         ),
       ),

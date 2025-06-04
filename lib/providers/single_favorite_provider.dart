@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 
-class SingleFavoriteNotifier extends Notifier<StringUrlPair> {
+class SingleFavoriteNotifier extends Notifier<StringUrlNameTriplet> {
   @override
-  StringUrlPair build() {
-    return const StringUrlPair(string: '', url: '');
+  StringUrlNameTriplet build() {
+    return const StringUrlNameTriplet(string: '', url: '', name: '');
   }
 
-  void set(StringUrlPair val) => state = val;
+  void set(StringUrlNameTriplet val) => state = val;
 }
 
 final singleFavoriteProvider =
-    NotifierProvider<SingleFavoriteNotifier, StringUrlPair>(() {
+    NotifierProvider<SingleFavoriteNotifier, StringUrlNameTriplet>(() {
   return SingleFavoriteNotifier();
 });

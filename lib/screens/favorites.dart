@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/providers/single_favorite_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -10,7 +10,7 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<StringUrlPair>> imageList =
+    final AsyncValue<List<StringUrlNameTriplet>> imageList =
         ref.watch(futureFavoritesProvider);
 
     return switch (imageList) {
@@ -31,18 +31,21 @@ class FavoritesScreen extends ConsumerWidget {
                             Navigator.of(context).pushNamed('/favorite');
                           },
                           child: Skeletonizer.zone(
-                            child: Image.network(
-                              pair.url,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return const Bone(
-                                  height: 300,
-                                  width: 350,
-                                );
-                              },
+                            child: ClipRRect(
+                              borderRadius: BorderRadiusGeometry.circular(15),
+                              child: Image.network(
+                                pair.url,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return const Bone(
+                                    height: 300,
+                                    width: 350,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),

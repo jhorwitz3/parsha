@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/widgets/card.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,7 +12,7 @@ class CarouselCard extends StatelessWidget {
       required this.category,
       required this.items,
       required this.aspectRatio});
-  final List<StringUrlPair> items;
+  final List<StringUrlNameTriplet> items;
   final String category;
   final double aspectRatio;
 
@@ -40,7 +40,7 @@ class CarouselWidget extends ConsumerStatefulWidget {
       required this.items,
       required this.aspectRatio});
 
-  final List<StringUrlPair> items;
+  final List<StringUrlNameTriplet> items;
   final String category;
   final double aspectRatio;
 
@@ -62,7 +62,7 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   @override
   Widget build(BuildContext context) {
     List<ParshaCardContent> cards = _buildCards();
-    List<StringUrlPair> favorites = ref.watch(favoritesProvider);
+    List<StringUrlNameTriplet> favorites = ref.watch(favoritesProvider);
     debugPrint('favorites: ${favorites.length}');
 
     return Column(

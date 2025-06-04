@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/widgets/carousel.dart';
@@ -13,29 +13,46 @@ class SummaryScreen extends ConsumerWidget {
   final TabController tabController;
   final int tabIndex;
 
+  List<StringUrlNameTriplet> pairToTriplet(
+      List<StringUrlNameTriplet> pairs, String parshaName) {
+    return pairs
+        .map((pair) => StringUrlNameTriplet(
+            string: pair.string, url: pair.url, name: parshaName))
+        .toList();
+  }
+
   List<CarouselCard> _buildSlidersFromData(
-      Parsha parsha, List<StringUrlPair> favorites) {
+      Parsha parsha, List<StringUrlNameTriplet> favorites) {
     List<CarouselCard> sliders = [];
 
     //summary
     sliders.add(CarouselCard(
-        category: 'Summary', items: [parsha.summary], aspectRatio: 0.5));
+        category: 'Summary',
+        items: pairToTriplet([parsha.summary], parsha.name),
+        aspectRatio: 0.5));
 
     //key points
     sliders.add(
       CarouselCard(
-          category: 'Key Points', items: parsha.keyPoints, aspectRatio: 0.8),
+          category: 'Key Points',
+          items: pairToTriplet(parsha.keyPoints, parsha.name),
+          aspectRatio: 0.8),
     );
 
     //lessons
     sliders.add(
       CarouselCard(
-          category: 'Lessons', items: parsha.lessons, aspectRatio: 0.8),
+          category: 'Lessons',
+          items: pairToTriplet(parsha.lessons, parsha.name),
+          aspectRatio: 0.8),
     );
 
     //themes
     sliders.add(
-      CarouselCard(category: 'Themes', items: parsha.themes, aspectRatio: 0.8),
+      CarouselCard(
+          category: 'Themes',
+          items: pairToTriplet(parsha.themes, parsha.name),
+          aspectRatio: 0.8),
     );
 
     return sliders;
@@ -44,7 +61,7 @@ class SummaryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
-    final List<StringUrlPair> favorites = ref.watch(favoritesProvider);
+    final List<StringUrlNameTriplet> favorites = ref.watch(favoritesProvider);
     switch (parsha) {
       case AsyncData(:final value):
         List<CarouselCard> cards = _buildSlidersFromData(value, favorites);

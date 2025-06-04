@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:parsha/models/parsha.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 
 import 'package:riverpod/riverpod.dart';
 
@@ -15,7 +15,7 @@ Future<Parsha> getParshaFromDb() async {
   final db = FirebaseFirestore.instance;
   Parsha currentParsha = const Parsha(
       name: 'This Weeks Parsha',
-      summary: StringUrlPair(string: 'error', url: 'url'),
+      summary: StringUrlNameTriplet(string: 'error', url: 'url', name: ''),
       keyPoints: [],
       themes: [],
       lessons: [],

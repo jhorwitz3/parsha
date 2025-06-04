@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:parsha/models/string_url_pair.dart';
+import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/user_provider.dart';
 
 import 'package:riverpod/riverpod.dart';
 
 final futureFavoritesProvider = FutureProvider.autoDispose((ref) async {
-  List<StringUrlPair> favorites = await getFavoritesFromDb(ref);
+  List<StringUrlNameTriplet> favorites = await getFavoritesFromDb(ref);
 
   return favorites;
 });
 
-Future<List<StringUrlPair>> getFavoritesFromDb(Ref ref) async {
+Future<List<StringUrlNameTriplet>> getFavoritesFromDb(Ref ref) async {
   final db = FirebaseFirestore.instance;
-  List<StringUrlPair> favorites = [];
+  List<StringUrlNameTriplet> favorites = [];
   User? currentUser = ref.read(currentUserProvider);
   if (currentUser == null) {
     return favorites;
@@ -23,7 +23,7 @@ Future<List<StringUrlPair>> getFavoritesFromDb(Ref ref) async {
     //DB stores favorites under userId/randomDocumentId
     await db.collection(currentUser.uid).get().then((event) {
       for (var doc in event.docs) {
-        favorites.add(StringUrlPair.fromJson(doc.data()));
+        favorites.add(StringUrlNameTriplet.fromJson(doc.data()));
       }
     });
   } catch (e) {
@@ -33,7 +33,7 @@ Future<List<StringUrlPair>> getFavoritesFromDb(Ref ref) async {
 }
 
 // Provider that provides concrete favoritres
-final favoritesProvider = Provider<List<StringUrlPair>>((ref) {
+final favoritesProvider = Provider<List<StringUrlNameTriplet>>((ref) {
   final futureFavorites = ref.watch(futureFavoritesProvider);
   return futureFavorites.when(
     data: (favorites) => favorites,
@@ -52,7 +52,7 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
 
   /// Writes a StringUrlPair document to the user's Firestore collection
   /// Creates the collection if it doesn't exist
-  Future<void> writeStringUrlPair(StringUrlPair pair) async {
+  Future<void> writeStringUrlPair(StringUrlNameTriplet triplet) async {
     User? currentUser = ref.read(currentUserProvider);
     if (currentUser == null) {
       return;
@@ -64,33 +64,33 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
 
       // Check if the pair already exists
       final querySnapshot = await collection
-          .where('string', isEqualTo: pair.string)
-          .where('url', isEqualTo: pair.url)
+          .where('string', isEqualTo: triplet.string)
+          .where('url', isEqualTo: triplet.url)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Pair exists, remove it instead
         await querySnapshot.docs.first.reference.delete();
         debugPrint(
-            'StringUrlPair already existed - removed from collection: ${currentUser.uid}');
+            'StringUrlNameTriplet already existed - removed from collection: ${currentUser.uid}');
       } else {
         // Pair doesn't exist, add it
-        await collection.add(pair.toJson());
+        await collection.add(triplet.toJson());
         debugPrint(
-            'Successfully wrote StringUrlPair to collection: ${currentUser.uid}');
+            'Successfully wrote StringUrlNameTriplet to collection: ${currentUser.uid}');
       }
 
       //Refresh favorites
       ref.invalidate(futureFavoritesProvider);
     } catch (e) {
-      debugPrint('Error processing StringUrlPair: $e');
+      debugPrint('Error processing StringUrlNameTriplet: $e');
       rethrow;
     }
   }
 
   /// Removes a StringUrlPair document from the user's Firestore collection
   /// Note: This removes the first matching document found
-  Future<void> removeStringUrlPair(StringUrlPair pair) async {
+  Future<void> removeStringUrlPair(StringUrlNameTriplet triplet) async {
     User? currentUser = ref.read(currentUserProvider);
     if (currentUser == null) {
       return;
@@ -102,8 +102,8 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
 
       // Query for documents that match both string and url
       final querySnapshot = await collection
-          .where('string', isEqualTo: pair.string)
-          .where('url', isEqualTo: pair.url)
+          .where('string', isEqualTo: triplet.string)
+          .where('url', isEqualTo: triplet.url)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
