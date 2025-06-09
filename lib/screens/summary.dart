@@ -8,52 +8,41 @@ import 'package:parsha/widgets/carousel.dart';
 import 'package:parsha/widgets/skeleton.dart';
 
 class SummaryScreen extends ConsumerWidget {
-  const SummaryScreen(
-      {super.key, required this.tabController, required this.tabIndex});
+  const SummaryScreen({super.key, required this.tabController, required this.tabIndex});
   final TabController tabController;
   final int tabIndex;
 
-  List<StringUrlNameTriplet> pairToTriplet(
-      List<StringUrlNameTriplet> pairs, String parshaName) {
-    return pairs
-        .map((pair) => StringUrlNameTriplet(
-            string: pair.string, url: pair.url, name: parshaName))
-        .toList();
+  List<StringUrlNameTriplet> pairToTriplet(List<StringUrlNameTriplet> pairs, String parshaName) {
+    return pairs.map((pair) => StringUrlNameTriplet(string: pair.string, url: pair.url, name: parshaName)).toList();
   }
 
-  List<CarouselCard> _buildSlidersFromData(
-      Parsha parsha, List<StringUrlNameTriplet> favorites) {
+  List<CarouselCard> _buildSlidersFromData(Parsha parsha, List<StringUrlNameTriplet> favorites) {
     List<CarouselCard> sliders = [];
 
     //summary
-    sliders.add(CarouselCard(
-        category: 'Summary',
-        items: pairToTriplet([parsha.summary], parsha.name),
-        aspectRatio: 0.5));
+    sliders
+        .add(CarouselCard(category: 'Summary', items: pairToTriplet([parsha.summary], parsha.name), aspectRatio: 0.5));
 
     //key points
-    sliders.add(
-      CarouselCard(
-          category: 'Key Points',
-          items: pairToTriplet(parsha.keyPoints, parsha.name),
-          aspectRatio: 0.8),
-    );
+    if (parsha.keyPoints.isNotEmpty) {
+      sliders.add(
+        CarouselCard(category: 'Key Points', items: pairToTriplet(parsha.keyPoints, parsha.name), aspectRatio: 0.8),
+      );
+    }
 
     //lessons
-    sliders.add(
-      CarouselCard(
-          category: 'Lessons',
-          items: pairToTriplet(parsha.lessons, parsha.name),
-          aspectRatio: 0.8),
-    );
+    if (parsha.lessons.isNotEmpty) {
+      sliders.add(
+        CarouselCard(category: 'Lessons', items: pairToTriplet(parsha.lessons, parsha.name), aspectRatio: 0.8),
+      );
+    }
 
     //themes
-    sliders.add(
-      CarouselCard(
-          category: 'Themes',
-          items: pairToTriplet(parsha.themes, parsha.name),
-          aspectRatio: 0.8),
-    );
+    if (parsha.themes.isNotEmpty) {
+      sliders.add(
+        CarouselCard(category: 'Themes', items: pairToTriplet(parsha.themes, parsha.name), aspectRatio: 0.8),
+      );
+    }
 
     return sliders;
   }
