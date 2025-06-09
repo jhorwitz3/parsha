@@ -8,8 +8,7 @@ class PhoneNumberFormScreen extends ConsumerStatefulWidget {
   const PhoneNumberFormScreen({super.key});
 
   @override
-  ConsumerState<PhoneNumberFormScreen> createState() =>
-      _PhoneNumberFormScreenState();
+  ConsumerState<PhoneNumberFormScreen> createState() => _PhoneNumberFormScreenState();
 }
 
 class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
@@ -46,51 +45,54 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
       });
 
       FirebaseAuth auth = FirebaseAuth.instance;
+      try {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: '+1 ${_phoneController.text}',
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            debugPrint('verification completed');
 
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+1 ${_phoneController.text}',
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          debugPrint('verification completed');
+            setState(() {
+              _isLoading = false;
+            });
+            // Sign the user in (or link) with the auto-generated credential
+            await auth.signInWithCredential(credential);
+            if (mounted) Navigator.of(context).popAndPushNamed('/home');
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            debugPrint('verification failed: $e');
 
-          setState(() {
-            _isLoading = false;
-          });
-          // Sign the user in (or link) with the auto-generated credential
-          await auth.signInWithCredential(credential);
-          if (mounted) Navigator.of(context).popAndPushNamed('/home');
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          debugPrint('verification failed: $e');
+            setState(() {
+              _isLoading = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Verification failed: $e')),
+            );
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            debugPrint('code sent');
+            ref.read(verificationIdProvider.notifier).set(verificationId);
 
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Verification failed: $e')),
-          );
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          debugPrint('code sent');
-          ref.read(verificationIdProvider.notifier).set(verificationId);
+            setState(() {
+              _isLoading = false;
+            });
+            Navigator.of(context).popAndPushNamed('/code');
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            debugPrint('autoretrieval timeout');
 
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).popAndPushNamed('/code');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          debugPrint('autoretrieval timeout');
+            setState(() {
+              _isLoading = false;
+            });
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Failed to retrieve code. ID: $verificationId')));
+          },
+        );
+        debugPrint('Submitted phone number: ${_phoneController.text}');
 
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Failed to retrieve code. ID: $verificationId')));
-        },
-      );
-      debugPrint('Submitted phone number: ${_phoneController.text}');
-
-      await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
+      } catch (e) {
+        debugPrint('failed with $e');
+      }
     }
   }
 
@@ -105,15 +107,12 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Spacer(),
+                // const Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Please enter your phone number',
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium
-                        ?.copyWith(color: Colors.white),
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -124,8 +123,7 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
                   keyboardType: TextInputType.phone,
                   style: Theme.of(context).textTheme.labelMedium,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                        RegExp(r'[0-9+\-\s\(\)]')),
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s\(\)]')),
                   ],
                   decoration: InputDecoration(
                     iconColor: Colors.white,
@@ -136,8 +134,7 @@ class _PhoneNumberFormScreenState extends ConsumerState<PhoneNumberFormScreen> {
                       color: Colors.white,
                     ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.white)),
+                        borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.white)),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(
