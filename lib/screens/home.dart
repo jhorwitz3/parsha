@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
+import 'package:parsha/providers/tab_index_provider.dart';
 import 'package:parsha/screens/favorites.dart';
 import 'package:parsha/screens/summary.dart';
 import 'package:parsha/widgets/button.dart';
@@ -26,9 +27,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
+    final int index = ref.watch(tabIndexProvider);
     return switch (parsha) {
       AsyncError() => const Text('Oops, something unexpected happened'),
       AsyncData(:final value) => DefaultTabController(
+          initialIndex: index,
           length: 2,
           child: Scaffold(
             appBar: AppBar(
@@ -73,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                               ),
                             )),
                     icon: const Icon(
-                      Icons.settings,
+                      Icons.logout,
                       color: Colors.white,
                     ))
               ],
@@ -92,8 +95,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               controller: tabController,
               children: [
                 SummaryScreen(
-                  tabController: tabController,
-                  tabIndex: 0,
+                  tabControllerCallback: () => setState(() {
+                    tabController.index = 1;
+                  }),
                 ),
                 const FavoritesScreen(),
               ],

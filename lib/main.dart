@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
-import 'package:parsha/providers/user_provider.dart';
 import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'package:parsha/tools/time.dart';
