@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/providers/single_favorite_provider.dart';
+import 'package:parsha/providers/user_provider.dart';
+import 'package:parsha/widgets/button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class FavoritesScreen extends ConsumerWidget {
@@ -10,8 +12,31 @@ class FavoritesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<List<StringUrlNameTriplet>> imageList =
-        ref.watch(futureFavoritesProvider);
+    final AsyncValue<List<StringUrlNameTriplet>> imageList = ref.watch(futureFavoritesProvider);
+    bool isAuthenticated = ref.watch(isAuthenticatedProvider);
+
+    if (!isAuthenticated) {
+      return Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                'Login or create an account to save favorites',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+            ),
+            ColoredButton(
+                text: 'Sign In',
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/phone');
+                })
+          ],
+        ),
+      );
+    }
 
     return switch (imageList) {
       AsyncData(:final value) => Padding(
@@ -35,8 +60,7 @@ class FavoritesScreen extends ConsumerWidget {
                               borderRadius: BorderRadiusGeometry.circular(15),
                               child: Image.network(
                                 pair.url,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
+                                loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
                                     return child;
                                   }

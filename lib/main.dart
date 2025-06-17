@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: appTheme,
       home: const MyHomePage(),
       routes: routes,
@@ -74,30 +75,16 @@ class MyHomePage extends ConsumerWidget {
   }
 }
 
-class SignInButton extends ConsumerWidget {
+class SignInButton extends StatelessWidget {
   const SignInButton({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    bool isAuthenticated = ref.watch(isAuthenticatedProvider);
-    if (!isAuthenticated) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: WhiteButton(
-              text: 'Create Account',
-              onPressed: () => Navigator.of(context).pushNamed('/phone')),
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: WhiteButton(
-              text: "Let's Go",
-              onPressed: () => Navigator.of(context).pushNamed('/home')),
-        ),
-      );
-    }
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: ColoredButton(text: "Let's Go", onPressed: () => Navigator.of(context).pushNamed('/home')),
+      ),
+    );
   }
 }

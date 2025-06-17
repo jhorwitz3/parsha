@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
 import 'package:parsha/screens/favorites.dart';
 import 'package:parsha/screens/summary.dart';
+import 'package:parsha/widgets/button.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -36,6 +38,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 style: Theme.of(context).textTheme.labelMedium,
                 textAlign: TextAlign.center,
               ),
+              actions: [
+                IconButton(
+                    onPressed: () => showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text('Logout?', style: Theme.of(context).textTheme.displayMedium),
+                              content: SizedBox(
+                                height: 200,
+                                width: 200,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                      child: ColoredButton(
+                                          onPressed: () async {
+                                            FirebaseAuth auth = FirebaseAuth.instance;
+                                            await auth.signOut();
+                                            if (context.mounted) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          text: 'Yes'),
+                                    ),
+                                    ColoredButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      text: 'Cancel',
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )),
+                    icon: const Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ))
+              ],
             ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
