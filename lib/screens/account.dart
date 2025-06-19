@@ -101,7 +101,7 @@ class AccountScreen extends ConsumerWidget {
                 onPressed: () => showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          title: Text('Logout?', style: Theme.of(context).textTheme.displayMedium),
+                          title: Text('Sign Out?', style: Theme.of(context).textTheme.displayLarge),
                           content: SizedBox(
                             height: 200,
                             width: 200,
@@ -139,13 +139,15 @@ class AccountScreen extends ConsumerWidget {
               onPressed: () => showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                        title: Text('Delete Account?', style: Theme.of(context).textTheme.displayMedium),
+                        title: Text('Delete Account?', style: Theme.of(context).textTheme.displayLarge),
                         content: SizedBox(
                           height: 200,
                           width: 200,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Text("To delete account, sign out and sign back in. Then press 'Yes'.",
+                                  style: Theme.of(context).textTheme.displayMedium),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                                 child: ColoredButton(
