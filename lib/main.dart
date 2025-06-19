@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
+import 'package:parsha/providers/user_provider.dart';
 import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'package:parsha/tools/time.dart';
@@ -74,15 +75,22 @@ class MyHomePage extends ConsumerWidget {
   }
 }
 
-class SignInButton extends StatelessWidget {
+class SignInButton extends ConsumerWidget {
   const SignInButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // User? user = ref.watch(currentUserProvider);
+    // debugPrint('user: $user');
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Center(
-        child: ColoredButton(text: "Let's Go", onPressed: () => Navigator.of(context).pushNamed('/home')),
+        child: ColoredButton(
+            text: "Let's Go",
+            onPressed: () {
+              ref.invalidate(currentUserProvider);
+              Navigator.of(context).pushNamed('/home');
+            }),
       ),
     );
   }

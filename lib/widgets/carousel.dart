@@ -69,6 +69,7 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   Widget build(BuildContext context) {
     List<ParshaCardContent> cards = _buildCards();
     List<StringUrlNameTriplet> favorites = ref.watch(favoritesProvider);
+
     debugPrint('favorites: ${favorites.length}');
 
     return Column(

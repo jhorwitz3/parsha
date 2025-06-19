@@ -15,6 +15,8 @@ class FavoritesScreen extends ConsumerWidget {
     final AsyncValue<List<StringUrlNameTriplet>> imageList = ref.watch(futureFavoritesProvider);
     bool isAuthenticated = ref.watch(isAuthenticatedProvider);
 
+    debugPrint('imageList: $imageList');
+
     if (!isAuthenticated) {
       return Padding(
         padding: const EdgeInsets.all(24.0),
