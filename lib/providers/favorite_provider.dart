@@ -13,9 +13,11 @@ final futureFavoritesProvider = FutureProvider.autoDispose((ref) async {
 });
 
 Future<List<StringUrlNameTriplet>> getFavoritesFromDb(Ref ref) async {
+  debugPrint('getting faves');
   final db = FirebaseFirestore.instance;
   List<StringUrlNameTriplet> favorites = [];
-  User? currentUser = ref.read(currentUserProvider);
+  User? currentUser = ref.watch(currentUserProvider);
+  debugPrint('currentUser: $currentUser');
   if (currentUser == null) {
     return favorites;
   }
@@ -63,21 +65,17 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
       final collection = firestore.collection(currentUser.uid);
 
       // Check if the pair already exists
-      final querySnapshot = await collection
-          .where('string', isEqualTo: triplet.string)
-          .where('url', isEqualTo: triplet.url)
-          .get();
+      final querySnapshot =
+          await collection.where('string', isEqualTo: triplet.string).where('url', isEqualTo: triplet.url).get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Pair exists, remove it instead
         await querySnapshot.docs.first.reference.delete();
-        debugPrint(
-            'StringUrlNameTriplet already existed - removed from collection: ${currentUser.uid}');
+        debugPrint('StringUrlNameTriplet already existed - removed from collection: ${currentUser.uid}');
       } else {
         // Pair doesn't exist, add it
         await collection.add(triplet.toJson());
-        debugPrint(
-            'Successfully wrote StringUrlNameTriplet to collection: ${currentUser.uid}');
+        debugPrint('Successfully wrote StringUrlNameTriplet to collection: ${currentUser.uid}');
       }
 
       //Refresh favorites
@@ -101,16 +99,13 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
       final collection = firestore.collection(currentUser.uid);
 
       // Query for documents that match both string and url
-      final querySnapshot = await collection
-          .where('string', isEqualTo: triplet.string)
-          .where('url', isEqualTo: triplet.url)
-          .get();
+      final querySnapshot =
+          await collection.where('string', isEqualTo: triplet.string).where('url', isEqualTo: triplet.url).get();
 
       if (querySnapshot.docs.isNotEmpty) {
         // Remove the first matching document
         await querySnapshot.docs.first.reference.delete();
-        debugPrint(
-            'Successfully removed StringUrlPair from collection: ${currentUser.uid}');
+        debugPrint('Successfully removed StringUrlPair from collection: ${currentUser.uid}');
       } else {
         debugPrint('No matching StringUrlPair found to remove');
       }
@@ -123,7 +118,6 @@ class UpdateFavoritesNotifier extends Notifier<bool> {
   }
 }
 
-final updateFavoritesProvider =
-    NotifierProvider<UpdateFavoritesNotifier, bool>(() {
+final updateFavoritesProvider = NotifierProvider<UpdateFavoritesNotifier, bool>(() {
   return UpdateFavoritesNotifier();
 });

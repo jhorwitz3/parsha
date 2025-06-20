@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parsha/models/parsha.dart';
 import 'package:parsha/providers/parsha_provider.dart';
+import 'package:parsha/screens/account.dart';
 import 'package:parsha/screens/favorites.dart';
 import 'package:parsha/screens/summary.dart';
 
@@ -17,7 +18,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   @override
   void initState() {
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -44,6 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 tabs: [
                   Tab(icon: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.secondary)),
                   Tab(icon: Icon(Icons.favorite, color: Theme.of(context).colorScheme.secondary)),
+                  Tab(icon: Icon(Icons.person, color: Theme.of(context).colorScheme.secondary)),
                 ],
               ),
             ),
@@ -51,10 +53,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               controller: tabController,
               children: [
                 SummaryScreen(
-                  tabController: tabController,
-                  tabIndex: 0,
+                  tabControllerCallback: () => setState(() {
+                    tabController.index = 1;
+                  }),
                 ),
                 const FavoritesScreen(),
+                const AccountScreen()
               ],
             ),
           ),

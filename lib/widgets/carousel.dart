@@ -11,22 +11,27 @@ class CarouselCard extends StatelessWidget {
       {super.key,
       required this.category,
       required this.items,
-      required this.aspectRatio});
+      required this.aspectRatio,
+      required this.tabControllerCallback});
   final List<StringUrlNameTriplet> items;
   final String category;
   final double aspectRatio;
+  final void Function() tabControllerCallback;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.tertiary,
-            borderRadius: BorderRadius.circular(15)),
+        decoration:
+            BoxDecoration(color: Theme.of(context).colorScheme.tertiary, borderRadius: BorderRadius.circular(15)),
         child: Column(children: [
           CarouselWidget(
-              category: category, items: items, aspectRatio: aspectRatio)
+            category: category,
+            items: items,
+            aspectRatio: aspectRatio,
+            tabControllerCallback: tabControllerCallback,
+          )
         ]),
       ),
     );
@@ -38,11 +43,13 @@ class CarouselWidget extends ConsumerStatefulWidget {
       {super.key,
       required this.category,
       required this.items,
-      required this.aspectRatio});
+      required this.aspectRatio,
+      required this.tabControllerCallback});
 
   final List<StringUrlNameTriplet> items;
   final String category;
   final double aspectRatio;
+  final void Function() tabControllerCallback;
 
   @override
   ConsumerState<CarouselWidget> createState() => _CarouselWidgetState();
@@ -53,9 +60,8 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   final CarouselSliderController _controller = CarouselSliderController();
 
   List<ParshaCardContent> _buildCards() {
-    List<ParshaCardContent> cards = widget.items
-        .map((item) => ParshaCardContent(url: item.url, text: item.string))
-        .toList();
+    List<ParshaCardContent> cards =
+        widget.items.map((item) => ParshaCardContent(url: item.url, text: item.string)).toList();
     return cards;
   }
 
@@ -63,6 +69,7 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
   Widget build(BuildContext context) {
     List<ParshaCardContent> cards = _buildCards();
     List<StringUrlNameTriplet> favorites = ref.watch(favoritesProvider);
+
     debugPrint('favorites: ${favorites.length}');
 
     return Column(
@@ -88,14 +95,16 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                   )),
               IconButton(
                   onPressed: () async {
-                    await ref
-                        .read(updateFavoritesProvider.notifier)
-                        .writeStringUrlPair(widget.items[_current]);
+                    await ref.read(updateFavoritesProvider.notifier).writeStringUrlPair(widget.items[_current]);
+                    // if (context.mounted) {
+                    //   Navigator.of(context).pushNamed('/favorites');
+                    // }
+                    widget.tabControllerCallback.call();
                   },
                   icon: Icon(
-                    favorites.contains(widget.items[_current])
-                        ? Icons.favorite
-                        : Icons.favorite_border,
+                    widget.items.isEmpty || !favorites.contains(widget.items[_current])
+                        ? Icons.favorite_border
+                        : Icons.favorite,
                     color: Theme.of(context).colorScheme.primary,
                   ))
             ],
@@ -125,13 +134,10 @@ class _CarouselWidgetState extends ConsumerState<CarouselWidget> {
                 child: Container(
                   width: 12.0,
                   height: 12.0,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 4.0),
+                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black)
+                      color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
                           .withOpacity(_current == entry.key ? 0.9 : 0.4)),
                 ),
               );
