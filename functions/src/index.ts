@@ -46,7 +46,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   };
 
   // summary
-  const summaryPrompt = `Generate an image that illustrates the story of ${parsha.name}`;
+  const summaryPrompt = `Generate an image that illustrates the story of ${parsha.name} in a Judaica or Saturday comics style`;
   const summaryUrl = await genImage(summaryPrompt);
   const summaryUrlPair:StringImagePair = {string: parsha.summary, url: summaryUrl??""};
   parshaWithImages.summary = summaryUrlPair;
@@ -59,7 +59,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   // themes
   // generate an image for each theme
   for (const theme of parsha.themes) {
-    const prompt = `Generate an image that illustrates the theme of ${theme} in ${parsha.name}`;
+    const prompt = `Generate an image that illustrates the theme of ${theme} in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
     const themeUrl: string = await genImage(prompt) ?? "fail";
     parshaWithImages.themes.push({string: theme, url: themeUrl});
   }
@@ -72,7 +72,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   // keyPoints
   // generate an image for each keyPoint
   for (const point of parsha.keyPoints) {
-    const prompt = `Generate an image that illustrates ${point} as described in ${parsha.name}`;
+    const prompt = `Generate an image that illustrates ${point} as described in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
     const pointUrl: string = await genImage(prompt) ?? "fail";
     parshaWithImages.keyPoints.push({string: point, url: pointUrl});
   }
@@ -85,7 +85,7 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
   // lessons
   // generate an image for each lesson
   for (const lesson of parsha.lessons) {
-    const prompt = `Generate an image that illustrates ${lesson} as described in ${parsha.name}`;
+    const prompt = `Generate an image that illustrates ${lesson} as described in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
     const lessonUrl: string = await genImage(prompt) ?? "fail";
     parshaWithImages.lessons.push({string: lesson, url: lessonUrl});
   }
