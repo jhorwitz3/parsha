@@ -14,7 +14,7 @@ final parshaProvider = FutureProvider.autoDispose((ref) async {
 Future<Parsha> getParshaFromDb() async {
   final db = FirebaseFirestore.instance;
   Parsha currentParsha = const Parsha(
-      name: 'This Weeks Parsha',
+      name: '',
       summary: StringUrlNameTriplet(string: 'error', url: 'url', name: ''),
       keyPoints: [],
       themes: [],

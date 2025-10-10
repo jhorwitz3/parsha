@@ -9,6 +9,7 @@ import 'package:parsha/routes.dart';
 import 'package:parsha/style.dart';
 import 'package:parsha/tools/time.dart';
 import 'package:parsha/widgets/button.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -46,30 +47,44 @@ class MyHomePage extends ConsumerWidget {
     final AsyncValue<Parsha> parsha = ref.watch(parshaProvider);
     String todayDate = TimeTools().todayDate();
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
-            child: Text(
-              todayDate,
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-          ),
-          switch (parsha) {
-            AsyncData(:final value) => Padding(
-                padding: EdgeInsets.fromLTRB(24, 0, 24, height / 4),
-                child: Text(
-                  value.name,
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
+      body: Skeletonizer(
+        effect: ShimmerEffect(
+          baseColor: Theme.of(context).colorScheme.primary, // background gray
+          highlightColor: Color.fromARGB(255, 161, 215, 240), // lighter shimmer
+        ),
+        enabled: parsha.isLoading,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(24, height / 3, 24, 0),
+              child: Text(
+                todayDate,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
-            AsyncError() => const Text('Oops, something unexpected happened'),
-            _ => const CircularProgressIndicator(),
-          },
-          const SignInButton()
-        ],
+            ),
+            switch (parsha) {
+              AsyncData(:final value) => Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Text(
+                    value.name,
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                ),
+              AsyncError() => const Text('Oops, something unexpected happened'),
+              _ => Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: Bone.text(
+                    style: Theme.of(context).textTheme.displayLarge,
+                    words: 6,
+                  ),
+                ),
+            },
+            const Spacer(),
+            const SignInButton()
+          ],
+        ),
       ),
     );
   }
@@ -83,7 +98,7 @@ class SignInButton extends ConsumerWidget {
     // User? user = ref.watch(currentUserProvider);
     // debugPrint('user: $user');
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 64),
       child: Center(
         child: ColoredButton(
             text: "Let's Go",

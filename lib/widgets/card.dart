@@ -1,6 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+class ParshaCard extends StatelessWidget {
+  const ParshaCard(
+      {super.key,
+      required this.url,
+      required this.text,
+      this.top = false,
+      this.bottom = false});
+  final String url;
+  final String text;
+  final bool top;
+  final bool bottom;
+
+  @override
+  Widget build(BuildContext context) {
+    Radius topCorner = top ? const Radius.circular(10) : Radius.zero;
+    Radius bottomCorner = bottom ? const Radius.circular(10) : Radius.zero;
+    return Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.tertiary,
+            borderRadius: BorderRadius.only(
+                topLeft: topCorner,
+                topRight: topCorner,
+                bottomLeft: bottomCorner,
+                bottomRight: bottomCorner),
+            border: Border.all(color: Colors.white)),
+        child: ParshaCardContent(url: url, text: text));
+  }
+}
+
 class ParshaCardContent extends StatelessWidget {
   const ParshaCardContent({super.key, required this.url, required this.text});
   final String url;

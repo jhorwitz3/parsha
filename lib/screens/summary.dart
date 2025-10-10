@@ -4,65 +4,36 @@ import 'package:parsha/models/parsha.dart';
 import 'package:parsha/models/string_url_name_triplet.dart';
 import 'package:parsha/providers/favorite_provider.dart';
 import 'package:parsha/providers/parsha_provider.dart';
-import 'package:parsha/widgets/carousel.dart';
+import 'package:parsha/widgets/card.dart';
 import 'package:parsha/widgets/skeleton.dart';
 
 class SummaryScreen extends ConsumerWidget {
   const SummaryScreen({super.key, required this.tabControllerCallback});
   final void Function() tabControllerCallback;
 
-  List<StringUrlNameTriplet> pairToTriplet(List<StringUrlNameTriplet> pairs, String parshaName) {
-    return pairs.map((pair) => StringUrlNameTriplet(string: pair.string, url: pair.url, name: parshaName)).toList();
-  }
-
-  List<CarouselCard> _buildSlidersFromData(Parsha parsha, List<StringUrlNameTriplet> favorites) {
-    List<CarouselCard> sliders = [];
+  List<ParshaCard> _buildCards(
+      Parsha parsha, List<StringUrlNameTriplet> favorites) {
+    List<ParshaCard> cards = [];
 
     //summary
-    sliders.add(CarouselCard(
-      category: 'Summary',
-      items: pairToTriplet([parsha.summary], parsha.name),
-      aspectRatio: 0.5,
-      tabControllerCallback: tabControllerCallback,
+    cards.add(ParshaCard(
+      url: parsha.summary.url,
+      text: parsha.summary.string,
     ));
 
     //key points
     if (parsha.keyPoints.isNotEmpty) {
-      sliders.add(
-        CarouselCard(
-          category: 'Key Points',
-          items: pairToTriplet(parsha.keyPoints, parsha.name),
-          aspectRatio: 0.8,
-          tabControllerCallback: tabControllerCallback,
-        ),
-      );
+      for (StringUrlNameTriplet keyPoint in parsha.keyPoints) {
+        cards.add(
+          ParshaCard(
+            url: keyPoint.url,
+            text: keyPoint.string,
+          ),
+        );
+      }
     }
 
-    //lessons
-    if (parsha.lessons.isNotEmpty) {
-      sliders.add(
-        CarouselCard(
-          category: 'Lessons',
-          items: pairToTriplet(parsha.lessons, parsha.name),
-          aspectRatio: 0.8,
-          tabControllerCallback: tabControllerCallback,
-        ),
-      );
-    }
-
-    //themes
-    if (parsha.themes.isNotEmpty) {
-      sliders.add(
-        CarouselCard(
-          category: 'Themes',
-          items: pairToTriplet(parsha.themes, parsha.name),
-          aspectRatio: 0.8,
-          tabControllerCallback: tabControllerCallback,
-        ),
-      );
-    }
-
-    return sliders;
+    return cards;
   }
 
   @override
@@ -71,7 +42,7 @@ class SummaryScreen extends ConsumerWidget {
     final List<StringUrlNameTriplet> favorites = ref.watch(favoritesProvider);
     switch (parsha) {
       case AsyncData(:final value):
-        List<CarouselCard> cards = _buildSlidersFromData(value, favorites);
+        List<ParshaCard> cards = _buildCards(value, favorites);
 
         return SingleChildScrollView(
           child: Padding(
