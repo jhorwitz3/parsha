@@ -17,8 +17,8 @@ class SummaryScreen extends ConsumerWidget {
 
     //summary
     cards.add(ParshaCard(
-      url: parsha.summary.url,
-      text: parsha.summary.string,
+      stringUrlNameTriplet: parsha.summary,
+      top: true,
     ));
 
     //key points
@@ -26,9 +26,8 @@ class SummaryScreen extends ConsumerWidget {
       for (StringUrlNameTriplet keyPoint in parsha.keyPoints) {
         cards.add(
           ParshaCard(
-            url: keyPoint.url,
-            text: keyPoint.string,
-          ),
+              stringUrlNameTriplet: keyPoint,
+              bottom: keyPoint == parsha.keyPoints.last),
         );
       }
     }
