@@ -40,9 +40,6 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
     name: parsha.name,
     summary: {string: parsha.summary, url: ""},
     keyPoints: [],
-    themes: [],
-    characters: parsha.characters,
-    lessons: [],
   };
 
   // summary
@@ -56,18 +53,6 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
     .collection("currentParshaWithImages").doc("today")
     .set(parshaWithImages);
 
-  // themes
-  // generate an image for each theme
-  for (const theme of parsha.themes) {
-    const prompt = `Generate an image that illustrates the theme of ${theme} in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
-    const themeUrl: string = await genImage(prompt) ?? "fail";
-    parshaWithImages.themes.push({string: theme, url: themeUrl});
-  }
-
-  // Push the new message into Firestore using the Firebase Admin SDK after each update
-  await db
-    .collection("currentParshaWithImages").doc("today")
-    .set(parshaWithImages);
 
   // keyPoints
   // generate an image for each keyPoint
@@ -75,19 +60,6 @@ const assembleParshaWithImages = async (parsha:Parsha):Promise<ParshaWithImages>
     const prompt = `Generate an image that illustrates ${point} as described in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
     const pointUrl: string = await genImage(prompt) ?? "fail";
     parshaWithImages.keyPoints.push({string: point, url: pointUrl});
-  }
-
-  // Push the new message into Firestore using the Firebase Admin SDK after each update
-  await db
-    .collection("currentParshaWithImages").doc("today")
-    .set(parshaWithImages);
-
-  // lessons
-  // generate an image for each lesson
-  for (const lesson of parsha.lessons) {
-    const prompt = `Generate an image that illustrates ${lesson} as described in ${parsha.name}. Draw the image in a Judaica or Saturday comics style`;
-    const lessonUrl: string = await genImage(prompt) ?? "fail";
-    parshaWithImages.lessons.push({string: lesson, url: lessonUrl});
   }
 
   // Push the new message into Firestore using the Firebase Admin SDK after each update

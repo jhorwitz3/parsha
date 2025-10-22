@@ -7,15 +7,6 @@ const ParshaSchema = z.object({
   name: z.string(),
   summary: z.string(), // Brief summary of the parsha
   keyPoints: z.array(z.string()), // Main bullet points of the story
-  themes: z.array(z.string()), // Bullet points of main themes
-  characters: z.array(
-    z.object({
-      name: z.string(),
-      description: z.string(),
-      keyActions: z.array(z.string()), // Bullet points of character actions
-    })
-  ),
-  lessons: z.array(z.string()), // Bullet points of lessons/messages
 });
 
 export const genParsha = async (apiKey: string, parshaName: string) => {
@@ -40,13 +31,8 @@ export const genParsha = async (apiKey: string, parshaName: string) => {
 Do not include the word 'parashat' in the name
 2. A brief summary (2-3 sentences) of what this parsha is about
 3. 5-7 bullet points describing the key events in the parsha 
-(each point should be a single sentence)
-4. 3-5 bullet points about the main themes of the parsha
-5. For each key character in the parsha, provide:
-   - Their name
-   - A brief one-sentence description
-   - 2-4 bullet points about their key actions or role in this specific parsha
-6. 3-5 bullet points about lessons or messages we can learn from this parsha
+- each point should be a single sentence
+- each point should describe a visual scene
 
 Format all bullet points as simple, clear statements that would 
 display well in a mobile app.
