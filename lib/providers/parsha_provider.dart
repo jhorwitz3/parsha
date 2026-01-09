@@ -15,19 +15,19 @@ Future<Parsha> getParshaFromDb() async {
   final db = FirebaseFirestore.instance;
   Parsha currentParsha = const Parsha(
       name: 'This Weeks Parsha',
-      summary: StringUrlNameTriplet(string: 'error', url: 'url', name: ''),
-      keyPoints: [],
-      themes: [],
-      lessons: [],
-      characters: []);
+      summary: StringUrlNameTriplet(string: 'error', url: 'url', name: ''));
   try {
     await db.collection("currentParshaWithImages").get().then((event) {
+    debugPrint('event: ${event.docs.length}');
+
       for (var doc in event.docs) {
+        debugPrint('doc: ${doc.data()}');
+
         currentParsha = Parsha.fromJson(doc.data());
       }
     });
   } catch (e) {
-    debugPrint('Exception: $e');
+    debugPrint('get parsha exception: $e');
   }
   return currentParsha;
 }

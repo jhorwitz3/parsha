@@ -22,11 +22,6 @@ Parsha _$ParshaFromJson(Map<String, dynamic> json) {
 mixin _$Parsha {
   String get name => throw _privateConstructorUsedError;
   StringUrlNameTriplet get summary => throw _privateConstructorUsedError;
-  List<StringUrlNameTriplet> get keyPoints =>
-      throw _privateConstructorUsedError;
-  List<StringUrlNameTriplet> get themes => throw _privateConstructorUsedError;
-  List<Character> get characters => throw _privateConstructorUsedError;
-  List<StringUrlNameTriplet> get lessons => throw _privateConstructorUsedError;
 
   /// Serializes this Parsha to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,13 +37,7 @@ abstract class $ParshaCopyWith<$Res> {
   factory $ParshaCopyWith(Parsha value, $Res Function(Parsha) then) =
       _$ParshaCopyWithImpl<$Res, Parsha>;
   @useResult
-  $Res call(
-      {String name,
-      StringUrlNameTriplet summary,
-      List<StringUrlNameTriplet> keyPoints,
-      List<StringUrlNameTriplet> themes,
-      List<Character> characters,
-      List<StringUrlNameTriplet> lessons});
+  $Res call({String name, StringUrlNameTriplet summary});
 
   $StringUrlNameTripletCopyWith<$Res> get summary;
 }
@@ -70,10 +59,6 @@ class _$ParshaCopyWithImpl<$Res, $Val extends Parsha>
   $Res call({
     Object? name = null,
     Object? summary = null,
-    Object? keyPoints = null,
-    Object? themes = null,
-    Object? characters = null,
-    Object? lessons = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -84,22 +69,6 @@ class _$ParshaCopyWithImpl<$Res, $Val extends Parsha>
           ? _value.summary
           : summary // ignore: cast_nullable_to_non_nullable
               as StringUrlNameTriplet,
-      keyPoints: null == keyPoints
-          ? _value.keyPoints
-          : keyPoints // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
-      themes: null == themes
-          ? _value.themes
-          : themes // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
-      characters: null == characters
-          ? _value.characters
-          : characters // ignore: cast_nullable_to_non_nullable
-              as List<Character>,
-      lessons: null == lessons
-          ? _value.lessons
-          : lessons // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
     ) as $Val);
   }
 
@@ -121,13 +90,7 @@ abstract class _$$ParshaImplCopyWith<$Res> implements $ParshaCopyWith<$Res> {
       __$$ParshaImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      StringUrlNameTriplet summary,
-      List<StringUrlNameTriplet> keyPoints,
-      List<StringUrlNameTriplet> themes,
-      List<Character> characters,
-      List<StringUrlNameTriplet> lessons});
+  $Res call({String name, StringUrlNameTriplet summary});
 
   @override
   $StringUrlNameTripletCopyWith<$Res> get summary;
@@ -148,10 +111,6 @@ class __$$ParshaImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? summary = null,
-    Object? keyPoints = null,
-    Object? themes = null,
-    Object? characters = null,
-    Object? lessons = null,
   }) {
     return _then(_$ParshaImpl(
       name: null == name
@@ -162,22 +121,6 @@ class __$$ParshaImplCopyWithImpl<$Res>
           ? _value.summary
           : summary // ignore: cast_nullable_to_non_nullable
               as StringUrlNameTriplet,
-      keyPoints: null == keyPoints
-          ? _value._keyPoints
-          : keyPoints // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
-      themes: null == themes
-          ? _value._themes
-          : themes // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
-      characters: null == characters
-          ? _value._characters
-          : characters // ignore: cast_nullable_to_non_nullable
-              as List<Character>,
-      lessons: null == lessons
-          ? _value._lessons
-          : lessons // ignore: cast_nullable_to_non_nullable
-              as List<StringUrlNameTriplet>,
     ));
   }
 }
@@ -185,17 +128,7 @@ class __$$ParshaImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ParshaImpl implements _Parsha {
-  const _$ParshaImpl(
-      {required this.name,
-      required this.summary,
-      required final List<StringUrlNameTriplet> keyPoints,
-      required final List<StringUrlNameTriplet> themes,
-      required final List<Character> characters,
-      required final List<StringUrlNameTriplet> lessons})
-      : _keyPoints = keyPoints,
-        _themes = themes,
-        _characters = characters,
-        _lessons = lessons;
+  const _$ParshaImpl({required this.name, required this.summary});
 
   factory _$ParshaImpl.fromJson(Map<String, dynamic> json) =>
       _$$ParshaImplFromJson(json);
@@ -204,41 +137,10 @@ class _$ParshaImpl implements _Parsha {
   final String name;
   @override
   final StringUrlNameTriplet summary;
-  final List<StringUrlNameTriplet> _keyPoints;
-  @override
-  List<StringUrlNameTriplet> get keyPoints {
-    if (_keyPoints is EqualUnmodifiableListView) return _keyPoints;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_keyPoints);
-  }
-
-  final List<StringUrlNameTriplet> _themes;
-  @override
-  List<StringUrlNameTriplet> get themes {
-    if (_themes is EqualUnmodifiableListView) return _themes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_themes);
-  }
-
-  final List<Character> _characters;
-  @override
-  List<Character> get characters {
-    if (_characters is EqualUnmodifiableListView) return _characters;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_characters);
-  }
-
-  final List<StringUrlNameTriplet> _lessons;
-  @override
-  List<StringUrlNameTriplet> get lessons {
-    if (_lessons is EqualUnmodifiableListView) return _lessons;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_lessons);
-  }
 
   @override
   String toString() {
-    return 'Parsha(name: $name, summary: $summary, keyPoints: $keyPoints, themes: $themes, characters: $characters, lessons: $lessons)';
+    return 'Parsha(name: $name, summary: $summary)';
   }
 
   @override
@@ -247,25 +149,12 @@ class _$ParshaImpl implements _Parsha {
         (other.runtimeType == runtimeType &&
             other is _$ParshaImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.summary, summary) || other.summary == summary) &&
-            const DeepCollectionEquality()
-                .equals(other._keyPoints, _keyPoints) &&
-            const DeepCollectionEquality().equals(other._themes, _themes) &&
-            const DeepCollectionEquality()
-                .equals(other._characters, _characters) &&
-            const DeepCollectionEquality().equals(other._lessons, _lessons));
+            (identical(other.summary, summary) || other.summary == summary));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      name,
-      summary,
-      const DeepCollectionEquality().hash(_keyPoints),
-      const DeepCollectionEquality().hash(_themes),
-      const DeepCollectionEquality().hash(_characters),
-      const DeepCollectionEquality().hash(_lessons));
+  int get hashCode => Object.hash(runtimeType, name, summary);
 
   /// Create a copy of Parsha
   /// with the given fields replaced by the non-null parameter values.
@@ -286,11 +175,7 @@ class _$ParshaImpl implements _Parsha {
 abstract class _Parsha implements Parsha {
   const factory _Parsha(
       {required final String name,
-      required final StringUrlNameTriplet summary,
-      required final List<StringUrlNameTriplet> keyPoints,
-      required final List<StringUrlNameTriplet> themes,
-      required final List<Character> characters,
-      required final List<StringUrlNameTriplet> lessons}) = _$ParshaImpl;
+      required final StringUrlNameTriplet summary}) = _$ParshaImpl;
 
   factory _Parsha.fromJson(Map<String, dynamic> json) = _$ParshaImpl.fromJson;
 
@@ -298,14 +183,6 @@ abstract class _Parsha implements Parsha {
   String get name;
   @override
   StringUrlNameTriplet get summary;
-  @override
-  List<StringUrlNameTriplet> get keyPoints;
-  @override
-  List<StringUrlNameTriplet> get themes;
-  @override
-  List<Character> get characters;
-  @override
-  List<StringUrlNameTriplet> get lessons;
 
   /// Create a copy of Parsha
   /// with the given fields replaced by the non-null parameter values.
